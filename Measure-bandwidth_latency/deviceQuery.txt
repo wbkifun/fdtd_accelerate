@@ -1,0 +1,85 @@
+/home/kifang/NVIDIA_GPU_Computing_SDK/C/bin/linux/release/deviceQuery Starting...
+
+ CUDA Device Query (Runtime API) version (CUDART static linking)
+
+There are 3 devices supporting CUDA
+
+Device 0: "Tesla C1060"
+  CUDA Driver Version:                           3.0
+  CUDA Runtime Version:                          3.0
+  CUDA Capability Major revision number:         1
+  CUDA Capability Minor revision number:         3
+  Total amount of global memory:                 4294770688 bytes
+  Number of multiprocessors:                     30
+  Number of cores:                               240
+  Total amount of constant memory:               65536 bytes
+  Total amount of shared memory per block:       16384 bytes
+  Total number of registers available per block: 16384
+  Warp size:                                     32
+  Maximum number of threads per block:           512
+  Maximum sizes of each dimension of a block:    512 x 512 x 64
+  Maximum sizes of each dimension of a grid:     65535 x 65535 x 1
+  Maximum memory pitch:                          2147483647 bytes
+  Texture alignment:                             256 bytes
+  Clock rate:                                    1.30 GHz
+  Concurrent copy and execution:                 Yes
+  Run time limit on kernels:                     No
+  Integrated:                                    No
+  Support host page-locked memory mapping:       Yes
+  Compute mode:                                  Default (multiple host threads can use this device simultaneously)
+
+Device 1: "Tesla C1060"
+  CUDA Driver Version:                           3.0
+  CUDA Runtime Version:                          3.0
+  CUDA Capability Major revision number:         1
+  CUDA Capability Minor revision number:         3
+  Total amount of global memory:                 4294770688 bytes
+  Number of multiprocessors:                     30
+  Number of cores:                               240
+  Total amount of constant memory:               65536 bytes
+  Total amount of shared memory per block:       16384 bytes
+  Total number of registers available per block: 16384
+  Warp size:                                     32
+  Maximum number of threads per block:           512
+  Maximum sizes of each dimension of a block:    512 x 512 x 64
+  Maximum sizes of each dimension of a grid:     65535 x 65535 x 1
+  Maximum memory pitch:                          2147483647 bytes
+  Texture alignment:                             256 bytes
+  Clock rate:                                    1.30 GHz
+  Concurrent copy and execution:                 Yes
+  Run time limit on kernels:                     No
+  Integrated:                                    No
+  Support host page-locked memory mapping:       Yes
+  Compute mode:                                  Default (multiple host threads can use this device simultaneously)
+
+Device 2: "Tesla C1060"
+  CUDA Driver Version:                           3.0
+  CUDA Runtime Version:                          3.0
+  CUDA Capability Major revision number:         1
+  CUDA Capability Minor revision number:         3
+  Total amount of global memory:                 4294770688 bytes
+  Number of multiprocessors:                     30
+  Number of cores:                               240
+  Total amount of constant memory:               65536 bytes
+  Total amount of shared memory per block:       16384 bytes
+  Total number of registers available per block: 16384
+  Warp size:                                     32
+  Maximum number of threads per block:           512
+  Maximum sizes of each dimension of a block:    512 x 512 x 64
+  Maximum sizes of each dimension of a grid:     65535 x 65535 x 1
+  Maximum memory pitch:                          2147483647 bytes
+  Texture alignment:                             256 bytes
+  Clock rate:                                    1.30 GHz
+  Concurrent copy and execution:                 Yes
+  Run time limit on kernels:                     No
+  Integrated:                                    No
+  Support host page-locked memory mapping:       Yes
+  Compute mode:                                  Default (multiple host threads can use this device simultaneously)
+
+deviceQuery, CUDA Driver = CUDART, CUDA Driver Version = 4249427, CUDA Runtime Version = 3.0, NumDevs = 3, Device = Tesla C1060, Device = Tesla C1060
+
+
+PASSED
+
+Press <Enter> to Quit...
+-----------------------------------------------------------

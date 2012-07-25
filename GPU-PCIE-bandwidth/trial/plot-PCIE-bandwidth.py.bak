@@ -1,0 +1,53 @@
+#!/usr/bin/env python
+
+import scipy as sc
+import h5py
+import sys
+
+str = sys.argv[1]
+str_list = str.rstrip('.h5')[str.rfind('_')+1:str.rfind('KB')].split('~')
+m_start = int( str_list[0].rstrip('KB') )
+m_end = int( str_list[1] )+ 1
+print m_start, m_end
+m_list = range( m_start, m_end )
+print len(m_list)
+
+fd = h5py.File( sys.argv[1] )
+dset1_name = '/%s/htod.dset' % sys.argv[2]
+dset2_name = dset1_name.replace( 'htod', 'dtoh' )
+dset1 = fd[ dset1_name ]
+dset2 = fd[ dset2_name ]
+print dset1.shape
+htod = sc.zeros( dset1.shape, dset1.dtype )
+dtoh = sc.zeros_like( htod )
+dset1.read_direct( htod )
+dset2.read_direct( dtoh )
+fd.close()
+
+from pylab import *
+num_gpus = htod.shape[0]
+l_list = []
+l_label_list = []
+color_list = [ 'b', 'g', 'r', 'c', 'm', 'y' ]
+for dev in range( num_gpus ):
+	l = plot( m_list, htod[dev][:], color_list[dev]+'o-' )
+	plot( m_list, dtoh[dev][:], color_list[dev]+'d-' )
+	l_list.append( l )
+	l_label = 'GPU %d' % ( dev )
+	l_label_list.append( l_label )
+	'''
+	l1 = plot( m_list, htod[dev][:], 'bo-' )
+	l2 = plot( m_list, dtoh[dev][:], 'rd-' )
+	'''
+title( 'PCIE Bandwidth' )
+xlabel( 'Data size (KB)' )
+ylabel( 'Data transfer rate (GB/s)' )
+axis([1,1024,0,3])
+xticks( range(0, 1025, 128) )
+legend( l_list, l_label_list, numpoints=1, loc='lower right', shadow=True )
+#legend( (l1, l2), ('Host to Device', 'Device to Host' ), loc='lower right', shadow=True )
+
+fpath = './fig/bandwidth-%dgpu' % num_gpus
+savefig( fpath+ '.eps', dpi=150 )
+savefig( fpath+ '.png', dpi=150 )
+show()

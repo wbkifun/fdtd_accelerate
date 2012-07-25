@@ -1,0 +1,88 @@
+<!DOCTYPE cpj>
+<cpj version="1.0" >
+ <session>
+  <name>040</name>
+  <progpath>"/home/kifang/kuFDTD/v0.1.0/dim3/gpu/trial/040-pitched-smem-non_if.py"</progpath>
+  <workdirpath>/home/kifang/kuFDTD/v0.1.0/dim3/gpu/trial</workdirpath>
+  <datetime>17 Jun 2009 18:05:07</datetime>
+ </session>
+ <session>
+  <name>112</name>
+  <progpath>"/home/kifang/kuFDTD/v0.1.0/dim3/gpu/trial/112-non_aligned.py"</progpath>
+  <workdirpath>/home/kifang/kuFDTD/v0.1.0/dim3/gpu/trial</workdirpath>
+  <datetime>17 Jun 2009 18:05:48</datetime>
+ </session>
+ <session>
+  <name>113</name>
+  <progpath>"/home/kifang/kuFDTD/v0.1.0/dim3/gpu/trial/113-non_alignd-args.py"</progpath>
+  <workdirpath>/home/kifang/kuFDTD/v0.1.0/dim3/gpu/trial</workdirpath>
+  <datetime>17 Jun 2009 18:06:47</datetime>
+ </session>
+ <session>
+  <name>114</name>
+  <progpath>"/home/kifang/kuFDTD/v0.1.0/dim3/gpu/trial/114-non_alignd-args-Nx+1.py"</progpath>
+  <workdirpath>/home/kifang/kuFDTD/v0.1.0/dim3/gpu/trial</workdirpath>
+  <datetime>17 Jun 2009 18:07:36</datetime>
+ </session>
+ <session>
+  <name>115</name>
+  <progpath>"/home/kifang/kuFDTD/v0.1.0/dim3/gpu/trial/115-non_alignd2-args.py"</progpath>
+  <workdirpath>/home/kifang/kuFDTD/v0.1.0/dim3/gpu/trial</workdirpath>
+  <datetime>17 Jun 2009 18:12:26</datetime>
+ </session>
+ <session>
+  <name>120</name>
+  <progpath>"/home/kifang/kuFDTD/v0.1.0/dim3/gpu/trial/120-pass_xy0cell-args.py"</progpath>
+  <workdirpath>/home/kifang/kuFDTD/v0.1.0/dim3/gpu/trial</workdirpath>
+  <datetime>18 Jun 2009 10:33:04</datetime>
+ </session>
+ <session>
+  <name>121</name>
+  <progpath>"/home/kifang/kuFDTD/v0.1.0/dim3/gpu/trial/121-pass_xy0cell-args-smem.py"</progpath>
+  <workdirpath>/home/kifang/kuFDTD/v0.1.0/dim3/gpu/trial</workdirpath>
+  <datetime>18 Jun 2009 10:43:15</datetime>
+ </session>
+ <session>
+  <name>130</name>
+  <progpath>"/home/kifang/kuFDTD/v0.1.0/dim3/gpu/trial/130-pitched-smem-1if.py"</progpath>
+  <workdirpath>/home/kifang/kuFDTD/v0.1.0/dim3/gpu/trial</workdirpath>
+  <datetime>18 Jun 2009 11:14:02</datetime>
+ </session>
+ <session>
+  <name>131</name>
+  <progpath>"/home/kifang/kuFDTD/v0.1.0/dim3/gpu/trial/131-pass_x0cell-smem-non_if.py"</progpath>
+  <workdirpath>/home/kifang/kuFDTD/v0.1.0/dim3/gpu/trial</workdirpath>
+  <datetime>18 Jun 2009 11:32:54</datetime>
+ </session>
+ <session>
+  <name>132</name>
+  <progpath>"/home/kifang/kuFDTD/v0.1.0/dim3/gpu/trial/132-pass_h_x0cell-smem-1if.py"</progpath>
+  <workdirpath>/home/kifang/kuFDTD/v0.1.0/dim3/gpu/trial</workdirpath>
+  <datetime>18 Jun 2009 15:05:03</datetime>
+ </session>
+ <session>
+  <name>Session11</name>
+  <progpath>"/home/kifang/kuFDTD/v0.1.0/dim3/gpu/trial/132-pass_h_x0cell-smem-1if.py"</progpath>
+  <workdirpath>/home/kifang/kuFDTD/v0.1.0/dim3/gpu/trial</workdirpath>
+  <datetime>18 Jun 2009 15:33:08</datetime>
+ </session>
+ <session>
+  <name>Session12</name>
+  <progpath>"/home/kifang/kuFDTD/v0.1.0/dim3/gpu/test/010-dielectric.py"</progpath>
+  <workdirpath>/home/kifang/kuFDTD/v0.1.0/dim3/gpu/test</workdirpath>
+  <datetime>18 Jun 2009 15:35:30</datetime>
+ </session>
+ <session>
+  <name>Session13</name>
+  <progpath>"/home/kifang/kuFDTD/v0.1.0/dim3/gpu/test/010-dielectric.py"</progpath>
+  <workdirpath>/home/kifang/kuFDTD/v0.1.0/dim3/gpu/test</workdirpath>
+  <datetime>18 Jun 2009 15:36:27</datetime>
+ </session>
+ <session>
+  <name>test-010</name>
+  <progpath>"/home/kifang/kuFDTD/v0.1.0/dim3/gpu/test/010-dielectric.py"</progpath>
+  <workdirpath>/home/kifang/kuFDTD/v0.1.0/dim3/gpu/test</workdirpath>
+  <datetime>18 Jun 2009 16:00:00</datetime>
+ </session>
+</cpj>
+

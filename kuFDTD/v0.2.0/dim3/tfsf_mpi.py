@@ -1,0 +1,108 @@
+'''
+ Author : Ki-Hwan Kim (wbkifun@korea.ac.kr)
+          Kim, KyoungHo (rain_woo@korea.ac.kr)
+
+ Written date : 2009. 7. 17
+ last update  :
+
+ Copyright : GNU GPL
+'''
+
+from kufdtd.common import *
+from kufdtd.dim3.tfsf import Tfsf
+import pypar as mpi
+
+
+class TfsfMpi( Tfsf ):
+	def __init__( s, global_pt1, global_pt2, apply_direction, wavelength, propagation_direction, polarization_angle ):
+		s.myrank = mpi.rank()
+		s.global_pt1, s.global_pt2 = global_pt1, global_pt2
+		s.apply_direction = apply_direction
+		s.wavelength = wavelength
+		s.propagation_direction = propagation_direction
+		s.p_angle = polarization_angle
+
+		s.gi1 = global_pt1[0]
+		s.gi2 = global_pt2[0]
+
+
+	def set_space( s, Space, Nx_list ):
+		s.Space = Space
+
+		s.Nx_sum_list = list( (sc.array(Nx_list)[:]).cumsum() )
+		s.Nx_sum_list.insert(0,0)
+
+		if s.gi1 == None: s.gi1 = 1
+		if s.gi2 == None: s.gi2 = s.Nx_sum_list[-1]
+		s.participant_list = s.calc_participant_list()
+
+		if s.myrank in s.participant_list:
+			s.participant = True
+
+			s.space1d = s.make_space1d( s.global_pt1, s.global_pt2 )
+
+			fb = s.apply_direction[0]
+			if s.myrank == s.participant_list[0]:
+				s.apply_direction = list_replace( list(s.apply_direction), 0, fb.replace('b','') )
+			elif s.myrank == s.participant_list[-1]:
+				s.apply_direction = list_replace( list(s.apply_direction), 0, fb.replace('f','') )
+			else:
+				s.apply_direction = list_replace( list(s.apply_direction), 0, '' )
+			pt1, pt2, i1_space1d, i2_space1d = s.calc_points()
+			for i in xrange(3): pt2[i] += 1
+			s.face_list = s.calc_face_list( pt1, pt2 )
+
+			axis = s.propagation_direction[1]
+			if 'x' is axis: i1, i2 = i1_space1d, i2_space1d+1
+			elif 'y' is axis: i1, i2 = 5, pt2[1] - pt1[1] + 5
+			elif 'z' is axis: i1, i2 = 5, pt2[2] - pt1[2] + 5
+			s.inc_list = s.calc_inc_list( i1, i2 )
+
+		else:
+			s.participant = False
+
+
+	def calc_participant_list( s ):
+		for rank in xrange( 1, mpi.size() ):
+			N1 = s.Nx_sum_list[rank-1]
+			N2 = s.Nx_sum_list[rank] 
+			if s.gi1 >= N1 and s.gi1 <= N2: 
+				start_rank = rank
+			if s.gi2 >= N1 and s.gi2 <= N2: 
+				end_rank = rank
+
+		return range( start_rank, end_rank+1 )
+
+
+	def calc_points( s ):
+		step_end = s.Nx_sum_list
+		step_start = list( sc.array( step_end )[:-1] + 1 )
+		step_start.insert( 0, 0 )
+		
+		if s.myrank == s.participant_list[0]: 
+			i1 = s.gi1
+			i1_space1d = 5
+		else: 
+			i1 = step_start[s.myrank] 
+			i1_space1d = step_start[s.myrank] - s.gi1 + 5
+		i1 -= s.Nx_sum_list[s.myrank-1]
+		if s.myrank == s.participant_list[-1]: 
+			i2 = s.gi2
+			i2_space1d = s.gi2 - s.gi1 + 5
+		else: 
+			i2 = step_end[s.myrank]
+			i2_space1d = step_end[s.myrank] - s.gi1 + 5
+		i2 -= s.Nx_sum_list[s.myrank-1]
+
+		pt1 = list_replace( list(s.global_pt1), 0, i1 )
+		pt2 = list_replace( list(s.global_pt2), 0, i2 )
+
+		return pt1, pt2, i1_space1d, i2_space1d
+
+
+	def updateE( s, tstep ):
+		if s.participant: Tfsf.updateE( s, tstep )
+
+
+	def updateH( s ):
+		if s.participant: Tfsf.updateH( s )

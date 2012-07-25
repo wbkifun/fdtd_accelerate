@@ -1,0 +1,34 @@
+/home/kifang/NVIDIA_GPU_Computing_SDK/OpenCL/bin/linux/release/oclBandwidthTest Starting...
+
+Running on...
+
+Tesla C1060
+
+Range Mode
+
+Device to Device Bandwidth, 1 Device(s)
+   Transfer Size (Bytes)	Bandwidth(MB/s)
+   73728			10589.3
+   184320			22041.3
+   294912			30047.1
+   405504			35873.4
+   516096			40163.1
+   626688			41866.4
+   737280			44887.7
+   847872			47287.9
+   958464			49392.6
+   1069056			50175.7
+   1179648			52315.4
+   1290240			54408.9
+   1400832			55641.0
+   1511424			56260.0
+   1622016			56045.1
+   1732608			58561.3
+   1843200			59383.8
+
+
+PASSED
+
+
+Press <Enter> to Quit...
+-----------------------------------------------------------

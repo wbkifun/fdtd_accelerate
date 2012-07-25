@@ -1,0 +1,40 @@
+v0.1.0
+	3D dielectric, drude material 구현
+	cpml 구현
+		matter/dielectric
+		matter/drude
+		boundary/cpml
+
+v0.1.1
+	2DEz, 2DHz 코드를 3D 코드에 통합
+		matter/dielectric
+		boundary/cpml
+	
+v0.3.0
+	mpi 구현 (odd, even paring 통신 방식)
+		boundary/mpi
+
+
+---------------------------------------------------------------------
+
+restart
+
+2009.6.11	v0.1.0	
+	Nvidia CUDA, PyCUDA를 이용하여 dielectric, non-kapa cpml 구현
+
+2009.6.18	cpu openmp error
+
+	$ gcc -O3 -fpic -msse -fopenmp -I. -I/usr/include/python2.5 -I/usr/lib/python2.5/site-packages/numpy/core/include dielectric.c -o dielectric.so
+
+	from kufdtd.dim3.cpu.core.dielectric import update_e, update_h
+
+	ImportError: /usr/lib/libgomp.so.1: cannot allocate memory in static TLS block
+
+		-> bug of the gcc 4.2.3
+
+2009.7.22	v0.1.0	
+	output, output_mpi
+	tfsf, tfsf_mpi
+	structure ( finite-cylinder(be-in method) )
+	drude ade ( but, partial-space로 구현한 것은 error )
+	spartial-divide cpml

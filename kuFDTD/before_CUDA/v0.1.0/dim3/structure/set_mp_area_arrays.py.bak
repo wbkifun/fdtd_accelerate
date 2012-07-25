@@ -1,0 +1,211 @@
+#!/usr/bin/env python
+# _*_ coding: utf-8 _*_
+
+"""
+ <File Description>
+
+ File Name : set_mp_area_arrays.py
+
+ Author : Kim Ki-hwan (wbkifun@korea.ac.kr)
+          Kim, KyoungHo (rain_woo@korea.ac.kr)
+
+ Written date : 2008. 3. 19
+
+ Copyright : GNU GPL
+
+============================== < File Description > ===========================
+
+Define the functions for conformal area arrays.
+    set_mp_area_arrays
+    set_mp_overlap_grid_area
+    make_cell_polygon_points
+
+===============================================================================
+"""
+
+from structure_base import *
+
+def set_mp_area_arrays(structures, MP_area_arrays):
+    #--------------------------------------------------------------------------
+    # grid-area value for single region
+    #--------------------------------------------------------------------------
+    for structure in structures:
+        DER = structure.discretized_effective_region
+        ISPTs_arrays = structure.intersection_points_arrays 
+        MP = list(structure.matter)[1:]
+
+        for axis in [x_axis, y_axis, z_axis]:
+            axis_list = [x_axis, y_axis, z_axis]
+            axis_list.pop(axis)
+            axis_list.insert(2, axis)
+            i_axis, j_axis, k_axis = axis_list
+
+            for k in xrange( DER[k_axis*2], DER[k_axis*2+1] ):
+                for i in xrange( DER[i_axis*2], DER[i_axis*2+1] ):
+                    for j in xrange( DER[j_axis*2], DER[j_axis*2+1] ):
+                        polygon_points = make_cell_polygon_points( \
+                                ISPTs_arrays, DER, axis_list, i, j, k)
+
+                        area = area_points( polygon_points )
+
+                        #------------------------------------------------------
+                        # apply grid area
+                        #------------------------------------------------------
+                        slice_indices = [i, j]
+                        slice_indices.insert( axis, k )
+                        for m, MP_area_array in enumerate(MP_area_arrays):
+                                MP_area_array[axis][ tuple(slice_indices) ] = MP[m]*area
+
+    #--------------------------------------------------------------------------
+    # grid-area value for overlap region
+    #--------------------------------------------------------------------------
+    for k, structure1 in enumerate(structures):
+        DER1 = structure1.discretized_effective_region
+        DERS1 = structure1.discretized_effective_region_sides
+        DERC1 = structure1.discretized_effective_region_center
+
+        for structure2 in structures[k+1:]:
+            DER2 = structure2.discretized_effective_region
+            DERS2 = structure2.discretized_effective_region_sides
+            DERC2 = structure2.discretized_effective_region_center
+
+            distance_center = abs( DERC2[:] - DERC1[:] )
+
+            is_overlap = True
+            for axis in [x_axis, y_axis, z_axis]:
+                if (DERS1[axis] + DERS2[axis]) <= 2*distance_center[axis]:
+                    is_overlap = False
+
+            if is_overlap:
+                ODER = overlap_DER = []
+                for axis in [x_axis, y_axis, z_axis]:
+                    ODER.append( [ \
+                            DER1[axis*2], DER1[axis*2+1], \
+                            DER2[axis*2], DER2[axis*2+1] ] )
+                    ODER[-1].sort()
+
+                ODER = [ ODER[0][1], ODER[0][2], \
+                         ODER[1][1], ODER[1][2], \
+                         ODER[2][1], ODER[2][2] ]
+
+                set_mp_overlap_grid_area( \
+                        MP_area_arrays, ODER, structure1, structure2 )
+
+
+def set_mp_overlap_grid_area( \
+        MP_area_arrays, ODER, structure1, structure2):
+    ISPTs_arrays1 = structure1.intersection_points_arrays
+    ISPTs_arrays2 = structure2.intersection_points_arrays
+    MP1 = list(structure1.matter)[1:]
+    MP2 = list(structure2.matter)[1:]
+
+    for axis in [x_axis, y_axis, z_axis]:
+        axis_list = [x_axis, y_axis, z_axis]
+        axis_list.pop(axis)
+        axis_list.insert(2, axis)
+        i_axis, j_axis, k_axis = axis_list
+
+        for k in xrange( ODER[k_axis*2], ODER[k_axis*2+1] ):
+            for i in xrange( ODER[i_axis*2], ODER[i_axis*2+1] ):
+                for j in xrange( ODER[j_axis*2], ODER[j_axis*2+1] ):
+                    polygon_points1 = make_cell_polygon_points( \
+                            ISPTs_arrays1, DER1, axis_list, i, j, k)
+                    polygon_points2 = make_cell_polygon_points( \
+                            ISPTs_arrays2, DER2, axis_list, i, j, k)
+
+                    area1 = area_points( polygon_points1 )
+                    area2 = area_points( polygon_points2 )
+
+                    if area1 != 0 and area2 != 0 and area2 != 1:
+                        #------------------------------------------------------
+                        # area of overlapped polygon in a grid cell
+                        #------------------------------------------------------
+                        overlap_polygon_points = []
+                        for i, p1 in polygon_points1[:-1]:
+                            p2 = polygon_points1[i+1]
+
+                            a1 = p2[1] - p1[1]
+                            b1 = -(p2[0] - p2[0])
+                            c1 = -a1*p1[0] + b1*p1[1]
+                            for j, p3 in polygon_points2[:-1]:
+                                p4 = polygon_points2[j+1]
+
+                                a2 = p4[1] - p3[1]
+                                b2 = -(p4[0] - p3[0])
+                                c2 = -a2*p3[0] + b2*p3[1]
+
+                                D = a1*b2 - a2*b1
+                                if D != 0:
+                                    ispt = ( ((-b2*c1 + b1*c2)/D), \
+                                             ((a2*c1 - a1*c2)/D) )
+
+                                    if point_in_boundary(polygon_points1,ispt) and point_in_boundary(polygon_points2,ispt):
+                                        overlap_polygon_points.append(ispt)
+
+                        # sort by rotation
+                        overlap_polygon_points = \
+                                sort_points(overlap_polygon_points)
+
+                        overlap_area = area_points( overlap_polygon_points )
+
+                        #------------------------------------------------------
+                        # apply grid area
+                        #------------------------------------------------------
+                        slice_indices = [i, j]
+                        slice_indices.insert( axis, k )
+                        for m, MP_area_array in enumerate(MP_area_arrays):
+                                MP_line_array[axis][ tuple(slice_indices) ] = \
+                                        MP1[m]*(area1 - overlap_area) + \
+                                        MP2[m]*area2
+
+
+def make_cell_polygon_points(ISPTs_arrays, DER, axis_list, i, j, k):
+    i_axis, j_axis, axis = axis_list
+    i0, j0, k0 = DER[i_axis*2], DER[j_axis*2], DER[k_axis*2]
+    if axis == x_axis:
+        c1, c2, c3, c4 = k-k0, j-j0, k-k0, j-j0+1
+        c5, c6, c7, c8 = k-k0, i-i0, k-k0, i-i0+1
+    elif axis == y_axis:
+        c1, c2, c3, c4 = k-k0, j-j0, k-k0, j-j0+1
+        c5, c6, c7, c8 = i-i0, k-k0, i-i0+1, k-k0
+    elif axis == z_axis:
+        c1, c2, c3, c4 = j-j0, k-k0, j-j0+1, k-k0
+        c5, c6, c7, c8 = i-i0, k-k0, i-j0+1, k-k0
+
+    x1 = ISPTs_arrays[i_axis][0][c1, c2]
+    x2 = ISPTs_arrays[i_axis][1][c1, c2]
+    x3 = ISPTs_arrays[i_axis][0][c3, c4]
+    x4 = ISPTs_arrays[i_axis][1][c3, c4]
+    y1 = ISPTs_arrays[j_axis][0][c5, c6]
+    y2 = ISPTs_arrays[j_axis][1][c5, c6]
+    y3 = ISPTs_arrays[j_axis][0][c7, c8]
+    y4 = ISPTs_arrays[j_axis][1][c7, c8]
+
+    xy_list = [x1, x2, x3, x4, y1, y2, y3, y4]
+
+    #------------------------------------------------------
+    # points which construct a polygon in a grid cell
+    #------------------------------------------------------
+    polygon_points = []
+    for n, x in enumerate( xy_list[:4] ):
+        if int(x) == i:
+            polygon_points.append( (x%1, n/2) )
+        elif ( n%2 == 0 and int(x) < i ) or \
+                ( n%2 == 1 and int(x) > i ):
+            polygon_points.append( (n%2, n/2) )
+
+    for n, y in enumerate( xy_list[4:] ):
+        if int(y) == j:
+            polygon_points.append( (n/2, y%1) )
+        elif ( n%2 == 0 and int(y) < j ) or \
+                ( n%2 == 1 and int(y) > j ):
+            polygon_points.append( (n/2, n%2) )
+
+    # for exception
+    if len( polygon_points ) == 2:
+        polygon_points.append( (0.5, 0.5) )
+
+    # sort by rotation
+    polygon_points = sort_points( polygon_points )
+
+    return polygon_points

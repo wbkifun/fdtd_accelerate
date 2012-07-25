@@ -1,0 +1,70 @@
+<!DOCTYPE cpj>
+<cpj version="1.0" >
+ <session>
+  <name>510-base</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/510-base.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>25 Nov 2009 20:05:21</datetime>
+ </session>
+ <session>
+  <name>520-remove-if</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/520-remove_int_divide_modulo.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>25 Nov 2009 20:12:02</datetime>
+ </session>
+ <session>
+  <name>530-block2d</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/530-block2d.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>25 Nov 2009 20:15:53</datetime>
+ </session>
+ <session>
+  <name>540-block3d</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/540-block3d.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>25 Nov 2009 20:19:03</datetime>
+ </session>
+ <session>
+  <name>550-1d-tex</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/550-block1d-texture.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>25 Nov 2009 20:25:04</datetime>
+ </session>
+ <session>
+  <name>560-1d-smem</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/560-block1d-smem.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>25 Nov 2009 20:29:04</datetime>
+ </session>
+ <session>
+  <name>570-1d-tex-smem</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/570-block1d-texture-smem.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>25 Nov 2009 20:31:33</datetime>
+ </session>
+ <session>
+  <name>580-2d-smem</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/580-block2d-smem.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>25 Nov 2009 20:33:36</datetime>
+ </session>
+ <session>
+  <name>590-2d-tex-smem</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/590-block2d-texture-smem.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>25 Nov 2009 20:36:15</datetime>
+ </session>
+ <session>
+  <name>600-3d-smem</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/600-block3d-smem.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>25 Nov 2009 20:38:58</datetime>
+ </session>
+ <session>
+  <name>610-3d-tex-smem</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/610-block3d-texture-smem.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>25 Nov 2009 20:42:25</datetime>
+ </session>
+</cpj>
+

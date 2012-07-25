@@ -1,0 +1,28 @@
+<!DOCTYPE cpj>
+<cpj version="1.0" >
+ <session>
+  <name>100</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/100-block1d-grid1d-smem.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>20 Nov 2009 19:47:21</datetime>
+ </session>
+ <session>
+  <name>101</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/101-block1d-grid1d-smem-register.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>20 Nov 2009 19:48:43</datetime>
+ </session>
+ <session>
+  <name>110</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/110-block2d-grid2d-smem.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>20 Nov 2009 19:51:14</datetime>
+ </session>
+ <session>
+  <name>111</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/111-block2d-grid2d-smem-register.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>20 Nov 2009 19:51:54</datetime>
+ </session>
+</cpj>
+

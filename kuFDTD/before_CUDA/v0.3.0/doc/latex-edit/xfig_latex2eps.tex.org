@@ -1,0 +1,15 @@
+\documentclass{article}
+\usepackage{epsfig}
+\usepackage{color}
+\setlength{\textwidth}{100cm}
+\setlength{\textheight}{100cm}
+
+\makeatletter
+\newcommand{\rmnum}[1]{\romannumeral #1}
+\newcommand{\Rmnum}[1]{\expandafter\@slowromancap\romannumeral #1@}
+\makeatother
+
+\begin{document}
+\pagestyle{empty}
+\input{pstex_t_file}
+\end{document}

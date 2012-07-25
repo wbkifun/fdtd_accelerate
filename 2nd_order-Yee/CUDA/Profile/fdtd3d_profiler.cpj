@@ -1,0 +1,22 @@
+<!DOCTYPE cpj>
+<cpj version="1.0" >
+ <session>
+  <name>Session2</name>
+  <progpath>"/home/kifang/FDTD_CUDA/fdtd3d_08_dynamic_smem_1d"</progpath>
+  <workdirpath>/home/kifang/FDTD_CUDA</workdirpath>
+  <datetime>06 Apr 2009 11:09:30</datetime>
+ </session>
+ <session>
+  <name>Session3</name>
+  <progpath>"/home/kifang/FDTD_CUDA/fdtd3d_09_cmem"</progpath>
+  <workdirpath>/home/kifang/FDTD_CUDA</workdirpath>
+  <datetime>06 Apr 2009 19:12:14</datetime>
+ </session>
+ <session>
+  <name>Session4</name>
+  <progpath>"/home/kifang/FDTD_CUDA/fdtd3d_09_cmem"</progpath>
+  <workdirpath>/home/kifang/FDTD_CUDA</workdirpath>
+  <datetime>06 Apr 2009 19:20:09</datetime>
+ </session>
+</cpj>
+

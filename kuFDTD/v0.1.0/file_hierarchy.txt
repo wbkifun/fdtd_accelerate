@@ -1,0 +1,51 @@
+common.py		-	print_elapsed_time
+
+
+---------------------------------------------------------------------
+dim3/
+	base.py			-	FdtdSpace
+
+
+	---------------------------------------------------------------------
+	cpu/
+
+	cpu/core/
+
+
+
+	---------------------------------------------------------------------
+	gpu/
+		base.py			-	GpuSpace
+		matter.py		-	Matter
+							Dielectric
+		cpml.py			-	CpmlNonKapa
+		source.py		-	Source
+
+	gpu/core/
+		initmem.cu			-	initmem
+		dielectric.cu		-	update_e
+								update_h
+		cpml_non_kapa.cu	-	update_x_e
+								update_x_h
+								update_y_e
+								update_y_h
+								update_z_e
+								update_z_h
+		source.cu			-	update_src
+
+
+---------------------------------------------------------------------
+dim2/
+
+
+	---------------------------------------------------------------------
+	cpu/
+	
+	cpu/core/
+
+
+
+	---------------------------------------------------------------------
+	gpu/
+
+	gpu/core/

@@ -1,0 +1,30 @@
+N(200,200,304), TMAX=100000
+Nz is a multiple of 16.
+Npml=10
+select TPB,BPG: main
+	Nsurplus_plane=60800, Nsurplus=0
+	Ntot=12160000, TPB=512
+	BPG=23750, sBPG(1)=23750, Ns_main=6152
+source: TPB=304, BPG=1
+select TPB,BPG: pml x
+	Nsurplus_plane=60800, Nsurplus=256
+	Ntot=608000, TPB=512
+	BPG=1188
+select TPB,BPG: pml y
+	Nsurplus_plane=3040, Nsurplus=256
+	Ntot=608000, TPB=512
+	BPG=1188
+select TPB,BPG: pml z
+	BPG=870, Ns_pmlz=4056
+select TPB,BPG: main init
+	TPB=512, BPG=23988, sBPG(1)=23988
+select TPB,BPG: main init
+	TPB=512, BPG=23988, sBPG(1)=23988
+main E: 	00:16:05 (965)
+main H: 	00:13:17 (797)
+cpmlx E:	00:01:42 (102)
+cpmlx H:	00:01:22 (82)
+cpmly E:	00:01:50 (110)
+cpmly H:	00:01:40 (100)
+cpmlz E:	00:02:15 (135)
+cpmlz H:	00:01:41 (101)

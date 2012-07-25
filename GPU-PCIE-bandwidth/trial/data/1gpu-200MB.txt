@@ -1,0 +1,5 @@
+Number of CUDA devices: 2
+Data size: 52428800 float ( 200.00 MB )
+Transfer rate:
+[GPU 0] 2.87 GB/s, 3.02 GB/s
+[GPU 1] 2.90 GB/s, 2.86 GB/s

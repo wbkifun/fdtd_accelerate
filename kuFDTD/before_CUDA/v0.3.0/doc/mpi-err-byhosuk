@@ -1,0 +1,24 @@
+0 - MPI_RECV : Invalid rank 1
+[0]  Aborting program !
+Pypar (version 1.9.1) initialised MPI OK with 1 processors
+[001]00:00:01    tstep = 0
+[0] Aborting program!
+p0_17567:  p4_error: : 8262
+-----------------------------------------------------------------------------
+It seems that [at least] one of the processes that was started with
+mpirun did not invoke MPI_INIT before quitting (it is possible that
+more than one process did not invoke MPI_INIT -- mpirun was only
+notified of the first one, which was on node n0).
+
+mpirun can *only* be used with MPI programs (i.e., programs that
+invoke MPI_INIT and MPI_FINALIZE).  You can use the "lamexec" program
+to run non-MPI programs over the lambooted nodes.
+-----------------------------------------------------------------------------
+Pypar (version 1.9.1) initialised MPI OK with 1 processors
+p0_17568:  p4_error: interrupt SIGx: 15
+Pypar (version 1.9.1) initialised MPI OK with 1 processors
+p0_17571:  p4_error: interrupt SIGx: 15
+Pypar (version 1.9.1) initialised MPI OK with 1 processors
+p0_17569:  p4_error: interrupt SIGx: 15
+Pypar (version 1.9.1) initialised MPI OK with 1 processors
+p0_17570:  p4_error: interrupt SIGx: 15

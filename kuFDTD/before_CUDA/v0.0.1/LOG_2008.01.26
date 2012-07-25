@@ -1,0 +1,23 @@
+수정인 : 김경호
+수정일 : 2008년 1월 26일
+
+
+수정사항
+
+(1)
+kufdtd_3d_cpml_core.c 파일이 제대로 컴파일 되도록 교정 및 수정.
+
+
+앞으로 해야 할 일
+
+(1)
+kufdtd_3d_core.c
+kufdtd_3d_cpml_core.c
+
+가 제대로 작동하는지 검사 필요.
+
+(2)
+위의 엔진이 작동되는 환경을 파이썬으로 구성.
+
+(3)
+3 dimensional case 외에도 2 dimensional case가 동작 할 수 있는 코드 추가.

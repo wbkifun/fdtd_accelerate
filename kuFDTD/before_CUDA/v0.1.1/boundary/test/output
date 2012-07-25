@@ -1,0 +1,195 @@
+direction=0, myrank=1, jj=[0, 1]
+None
+2
+1 [[(1, slice(1, -1, None), slice(1, -1, None)), (0, slice(1, -1, None), slice(1, -1, None))], [(1, slice(1, None, None), slice(1, -1, None)), (0, slice(1, None, None), slice(1, -1, None))], [(1, slice(1, -1, None), slice(1, None, None)), (0, slice(1, -1, None), slice(1, None, None))]]
+direction=1, myrank=1, jj=[0, 1]
+None
+None
+direction=2, myrank=1, jj=[0, 1]
+None
+None
+direction=0, myrank=1, jj=[0, 1]
+None
+2
+1 [[(1, slice(1, -1, None), slice(1, -1, None)), (0, slice(1, -1, None), slice(1, -1, None))], [(1, slice(1, None, None), slice(1, -1, None)), (0, slice(1, None, None), slice(1, -1, None))], [(1, slice(1, -1, None), slice(1, None, None)), (0, slice(1, -1, None), slice(1, None, None))]]
+direction=1, myrank=1, jj=[0, 1]
+None
+None
+direction=2, myrank=1, jj=[0, 1]
+None
+None
+direction=0, myrank=1, jj=[0, 1]
+None
+2
+1 [[(1, slice(1, -1, None), slice(1, -1, None)), (0, slice(1, -1, None), slice(1, -1, None))], [(1, slice(1, None, None), slice(1, -1, None)), (0, slice(1, None, None), slice(1, -1, None))], [(1, slice(1, -1, None), slice(1, None, None)), (0, slice(1, -1, None), slice(1, None, None))]]
+direction=1, myrank=1, jj=[0, 1]
+None
+None
+direction=2, myrank=1, jj=[0, 1]
+None
+None
+direction=0, myrank=1, jj=[0, 1]
+None
+2
+1 [[(1, slice(1, -1, None), slice(1, -1, None)), (0, slice(1, -1, None), slice(1, -1, None))], [(1, slice(1, None, None), slice(1, -1, None)), (0, slice(1, None, None), slice(1, -1, None))], [(1, slice(1, -1, None), slice(1, None, None)), (0, slice(1, -1, None), slice(1, None, None))]]
+direction=1, myrank=1, jj=[0, 1]
+None
+None
+direction=2, myrank=1, jj=[0, 1]
+None
+None
+direction=0, myrank=1, jj=[0, 1]
+None
+2
+1 [[(1, slice(1, -1, None), slice(1, -1, None)), (0, slice(1, -1, None), slice(1, -1, None))], [(1, slice(1, None, None), slice(1, -1, None)), (0, slice(1, None, None), slice(1, -1, None))], [(1, slice(1, -1, None), slice(1, None, None)), (0, slice(1, -1, None), slice(1, None, None))]]
+direction=1, myrank=1, jj=[0, 1]
+None
+None
+direction=2, myrank=1, jj=[0, 1]
+None
+None
+direction=0, myrank=1, jj=[0, 1]
+None
+2
+1 [[(1, slice(1, -1, None), slice(1, -1, None)), (0, slice(1, -1, None), slice(1, -1, None))], [(1, slice(1, None, None), slice(1, -1, None)), (0, slice(1, None, None), slice(1, -1, None))], [(1, slice(1, -1, None), slice(1, None, None)), (0, slice(1, -1, None), slice(1, None, None))]]
+direction=1, myrank=1, jj=[0, 1]
+None
+None
+direction=2, myrank=1, jj=[0, 1]
+None
+None
+direction=0, myrank=1, jj=[0, 1]
+None
+2
+1 [[(1, slice(1, -1, None), slice(1, -1, None)), (0, slice(1, -1, None), slice(1, -1, None))], [(1, slice(1, None, None), slice(1, -1, None)), (0, slice(1, None, None), slice(1, -1, None))], [(1, slice(1, -1, None), slice(1, None, None)), (0, slice(1, -1, None), slice(1, None, None))]]
+direction=1, myrank=1, jj=[0, 1]
+None
+None
+direction=2, myrank=1, jj=[0, 1]
+None
+None
+direction=0, myrank=1, jj=[0, 1]
+None
+2
+1 [[(1, slice(1, -1, None), slice(1, -1, None)), (0, slice(1, -1, None), slice(1, -1, None))], [(1, slice(1, None, None), slice(1, -1, None)), (0, slice(1, None, None), slice(1, -1, None))], [(1, slice(1, -1, None), slice(1, None, None)), (0, slice(1, -1, None), slice(1, None, None))]]
+direction=1, myrank=1, jj=[0, 1]
+None
+None
+direction=2, myrank=1, jj=[0, 1]
+None
+None
+direction=0, myrank=1, jj=[0, 1]
+None
+2
+1 [[(1, slice(1, -1, None), slice(1, -1, None)), (0, slice(1, -1, None), slice(1, -1, None))], [(1, slice(1, None, None), slice(1, -1, None)), (0, slice(1, None, None), slice(1, -1, None))], [(1, slice(1, -1, None), slice(1, None, None)), (0, slice(1, -1, None), slice(1, None, None))]]
+direction=1, myrank=1, jj=[0, 1]
+None
+None
+direction=2, myrank=1, jj=[0, 1]
+None
+None
+direction=0, myrank=1, jj=[0, 1]
+None
+2
+1 [[(1, slice(1, -1, None), slice(1, -1, None)), (0, slice(1, -1, None), slice(1, -1, None))], [(1, slice(1, None, None), slice(1, -1, None)), (0, slice(1, None, None), slice(1, -1, None))], [(1, slice(1, -1, None), slice(1, None, None)), (0, slice(1, -1, None), slice(1, None, None))]]
+direction=1, myrank=1, jj=[0, 1]
+None
+None
+directiondirection=0, myrank=2, jj=[1, 0]
+None
+1
+2 [[(1, slice(1, -1, None), slice(1, -1, None)), (0, slice(1, -1, None), slice(1, -1, None))], [(1, slice(1, None, None), slice(1, -1, None)), (0, slice(1, None, None), slice(1, -1, None))], [(1, slice(1, -1, None), slice(1, None, None)), (0, slice(1, -1, None), slice(1, None, None))]]
+direction=1, myrank=2, jj=[0, 1]
+None
+None
+direction=2, myrank=2, jj=[0, 1]
+None
+None
+direction=0, myrank=2, jj=[1, 0]
+None
+1
+2 [[(1, slice(1, -1, None), slice(1, -1, None)), (0, slice(1, -1, None), slice(1, -1, None))], [(1, slice(1, None, None), slice(1, -1, None)), (0, slice(1, None, None), slice(1, -1, None))], [(1, slice(1, -1, None), slice(1, None, None)), (0, slice(1, -1, None), slice(1, None, None))]]
+direction=1, myrank=2, jj=[0, 1]
+None
+None
+direction=2, myrank=2, jj=[0, 1]
+None
+None
+direction=0, myrank=2, jj=[1, 0]
+None
+1
+2 [[(1, slice(1, -1, None), slice(1, -1, None)), (0, slice(1, -1, None), slice(1, -1, None))], [(1, slice(1, None, None), slice(1, -1, None)), (0, slice(1, None, None), slice(1, -1, None))], [(1, slice(1, -1, None), slice(1, None, None)), (0, slice(1, -1, None), slice(1, None, None))]]
+direction=1, myrank=2, jj=[0, 1]
+None
+None
+direction=2, myrank=2, jj=[0, 1]
+None
+None
+direction=0, myrank=2, jj=[1, 0]
+None
+1
+2 [[(1, slice(1, -1, None), slice(1, -1, None)), (0, slice(1, -1, None), slice(1, -1, None))], [(1, slice(1, None, None), slice(1, -1, None)), (0, slice(1, None, None), slice(1, -1, None))], [(1, slice(1, -1, None), slice(1, None, None)), (0, slice(1, -1, None), slice(1, None, None))]]
+direction=1, myrank=2, jj=[0, 1]
+None
+None
+direction=2, myrank=2, jj=[0, 1]
+None
+None
+direction=0, myrank=2, jj=[1, 0]
+None
+1
+2 [[(1, slice(1, -1, None), slice(1, -1, None)), (0, slice(1, -1, None), slice(1, -1, None))], [(1, slice(1, None, None), slice(1, -1, None)), (0, slice(1, None, None), slice(1, -1, None))], [(1, slice(1, -1, None), slice(1, None, None)), (0, slice(1, -1, None), slice(1, None, None))]]
+direction=1, myrank=2, jj=[0, 1]
+None
+None
+direction=2, myrank=2, jj=[0, 1]
+None
+None
+direction=0, myrank=2, jj=[1, 0]
+None
+1
+2 [[(1, slice(1, -1, None), slice(1, -1, None)), (0, slice(1, -1, None), slice(1, -1, None))], [(1, slice(1, None, None), slice(1, -1, None)), (0, slice(1, None, None), slice(1, -1, None))], [(1, slice(1, -1, None), slice(1, None, None)), (0, slice(1, -1, None), slice(1, None, None))]]
+direction=1, myrank=2, jj=[0, 1]
+None
+None
+direction=2, myrank=2, jj=[0, 1]
+None
+None
+direction=0, myrank=2, jj=[1, 0]
+None
+1
+2 [[(1, slice(1, -1, None), slice(1, -1, None)), (0, slice(1, -1, None), slice(1, -1, None))], [(1, slice(1, None, None), slice(1, -1, None)), (0, slice(1, None, None), slice(1, -1, None))], [(1, slice(1, -1, None), slice(1, None, None)), (0, slice(1, -1, None), slice(1, None, None))]]
+direction=1, myrank=2, jj=[0, 1]
+None
+None
+direction=2, myrank=2, jj=[0, 1]
+None
+None
+direction=0, myrank=2, jj=[1, 0]
+None
+1
+2 [[(1, slice(1, -1, None), slice(1, -1, None)), (0, slice(1, -1, None), slice(1, -1, None))], [(1, slice(1, None, None), slice(1, -1, None)), (0, slice(1, None, None), slice(1, -1, None))], [(1, slice(1, -1, None), slice(1, None, None)), (0, slice(1, -1, None), slice(1, None, None))]]
+direction=1, myrank=2, jj=[0, 1]
+None
+None
+direction=2, myrank=2, jj=[0, 1]
+None
+None
+direction=0, myrank=2, jj=[1, 0]
+None
+1
+2 [[(1, slice(1, -1, None), slice(1, -1, None)), (0, slice(1, -1, None), slice(1, -1, None))], [(1, slice(1, None, None), slice(1, -1, None)), (0, slice(1, None, None), slice(1, -1, None))], [(1, slice(1, -1, None), slice(1, None, None)), (0, slice(1, -1, None), slice(1, None, None))]]
+direction=1, myrank=2, jj=[0, 1]
+None
+None
+direction=2, myrank=2, jj=[0, 1]
+None
+None
+direction=0, myrank=2, jj=[1, 0]
+None
+1
+2 [[(1, slice(1, -1, None), slice(1, -1, None)), (0, slice(1, -1, None), slice(1, -1, None))], [(1, slice(1, None, None), slice(1, -1, None)), (0, slice(1, None, None), slice(1, -1, None))], [(1, slice(1, -1, None), slice(1, None, None)), (0, slice(1, -1, None), slice(1, None, None))]]
+direction=1, myrank=2, jj=[0, 1]
+None
+None
+direction

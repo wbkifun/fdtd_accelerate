@@ -1,0 +1,116 @@
+__constant__ float rcmbE[NPMLp2];
+__constant__ float rcmaE[NPMLp2];
+__constant__ float rcmbH[NPMLp2];
+__constant__ float rcmaH[NPMLp2];
+
+
+__global__ void updateCPMLxE( int Nx, int Ny, int Nz, float *Ex, float *Ey,float *Ez, float *Hx, float *Hy,float *Hz, float *CEx, float *CEy,float *CEz, float *psi1, float *psi2, int backward ) {
+	int pidx = blockIdx.x*blockDim.x + threadIdx.x;
+	int Nyz = Ny*Nz;
+	int pi = pidx/Nyz + backward*(NPML+1);
+
+	int idx = pidx + ( 1 + backward*(Nx-NPML-2) )*Nyz;
+	int eidx = idx + Nyz;
+
+	psi1[pidx] = rcmbE[pi]*psi1[pidx] + rcmaE[pi]*( Hz[idx+Nyz] - Hz[idx] );
+	Ey[eidx] -= CEy[idx]*psi1[pidx];
+
+	psi2[pidx] = rcmbE[pi]*psi2[pidx] + rcmaE[pi]*( Hy[idx+Nyz] - Hy[idx] );
+	Ez[eidx] += CEz[idx]*psi2[pidx];
+}
+
+
+__global__ void updateCPMLxH( int Nx, int Ny, int Nz, float *Ex, float *Ey,float *Ez, float *Hx, float *Hy,float *Hz, float *psi1, float *psi2, int backward ) {
+	int pidx = blockIdx.x*blockDim.x + threadIdx.x;
+	int Nyz = Ny*Nz;
+	int pi = pidx/Nyz + 1 + backward*(NPML+1);
+
+	int idx = pidx + ( 1 + backward*(Nx-NPML-1) )*Nyz;
+	int eidx = idx + Nyz;
+
+	psi1[pidx] = rcmbH[pi]*psi1[pidx] + rcmaH[pi]*( Ez[eidx] - Ez[eidx-Nyz] );
+	Hy[idx] += 0.5*psi1[pidx];
+
+	psi2[pidx] = rcmbH[pi]*psi2[pidx] + rcmaH[pi]*( Ey[eidx] - Ey[eidx-Nyz] );
+	Hz[idx] -= 0.5*psi2[pidx];
+}
+
+
+__global__ void updateCPMLyE( int Ny, int Nz, float *Ex, float *Ey,float *Ez, float *Hx, float *Hy,float *Hz, float *CEx, float *CEy,float *CEz, float *psi1, float *psi2, int backward ) {
+	int pidx = blockIdx.x*blockDim.x + threadIdx.x;
+	int i = pidx/(NPML*Nz);
+	int pj = ( pidx/Nz )%NPML + backward*(NPML+1);
+
+	int idx = pidx + ( 1 + i*(Ny-NPML) + backward*(Ny-NPML-2) )*Nz;
+	int eidx = idx + Ny*Nz;
+
+	psi1[pidx] = rcmbE[pj]*psi1[pidx] + rcmaE[pj]*( Hx[idx+Nz] - Hx[idx] );
+	Ez[eidx] -= CEz[idx]*psi1[pidx];
+
+	psi2[pidx] = rcmbE[pj]*psi2[pidx] + rcmaE[pj]*( Hz[idx+Nz] - Hz[idx] );
+	Ex[eidx] += CEx[idx]*psi2[pidx];
+}
+
+
+__global__ void updateCPMLyH( int Ny, int Nz, float *Ex, float *Ey,float *Ez, float *Hx, float *Hy,float *Hz, float *psi1, float *psi2, int backward ) {
+	int pidx = blockIdx.x*blockDim.x + threadIdx.x;
+	int i = pidx/(NPML*Nz);
+	int pj = ( pidx/Nz )%NPML + 1 + backward*(NPML+1);
+
+	int idx = pidx + ( 1 + i*(Ny-NPML) + backward*(Ny-NPML-1) )*Nz;
+	int eidx = idx + Ny*Nz;
+
+	psi1[pidx] = rcmbH[pj]*psi1[pidx] + rcmaH[pj]*( Ex[eidx] - Ex[eidx-Nz] );
+	Hz[idx] += 0.5*psi1[pidx];
+
+	psi2[pidx] = rcmbH[pj]*psi2[pidx] + rcmaH[pj]*( Ez[eidx] - Ez[eidx-Nz] );
+	Hx[idx] -= 0.5*psi2[pidx];
+}
+
+
+__global__ void updateCPMLzE( int Ny, int Nz, float *Ex, float *Ey,float *Ez, float *Hx, float *Hy,float *Hz, float *CEx, float *CEy,float *CEz, float *psi1, float *psi2, int backward ) {
+	int tk = threadIdx.x;
+	int pidx = blockIdx.x*blockDim.x + tk;
+	int pk = pidx%NPMLp + backward*NPMLp;
+
+	int idx = pidx + 1 + (pidx/NPMLp)*(Nz-NPMLp) + backward*(Nz-NPMLp-1);
+	int eidx = idx + Ny*Nz;
+
+	extern __shared__ float hs[];
+	float* hx = (float*) hs;
+	float* hy = (float*) &hx[blockDim.x+1];
+
+	hx[tk] = Hx[idx];
+	hy[tk] = Hy[idx];
+	__syncthreads();
+
+	psi1[pidx] = rcmbE[pk]*psi1[pidx] + rcmaE[pk]*( hy[tk+1] - hy[tk] );
+	Ex[eidx] -= CEx[idx]*psi1[pidx];
+
+	psi2[pidx] = rcmbE[pk]*psi2[pidx] + rcmaE[pk]*( hx[tk+1] - hx[tk] );
+	Ey[eidx] += CEy[idx]*psi2[pidx];
+}
+
+
+__global__ void updateCPMLzH( int Ny, int Nz, float *Ex, float *Ey,float *Ez, float *Hx, float *Hy,float *Hz, float *psi1, float *psi2, int backward ) {
+	int tk = threadIdx.x;
+	int pidx = blockIdx.x*blockDim.x + tk;
+	int pk = pidx%NPMLp + backward*NPMLp;
+
+	int idx = pidx + (pidx/NPMLp + backward)*(Nz-NPMLp);
+	int eidx = idx + Ny*Nz;
+
+	extern __shared__ float es[];
+	float* ex = (float*) es;
+	float* ey = (float*) &ex[blockDim.x+1];
+
+	ex[tk+1] = Ex[eidx];
+	ey[tk+1] = Ey[eidx];
+	__syncthreads();
+
+	psi1[pidx] = rcmbH[pk]*psi1[pidx] + rcmaH[pk]*( ey[tk+1] - ey[tk] );
+	Hx[idx] += 0.5*psi1[pidx];
+
+	psi2[pidx] = rcmbH[pk]*psi2[pidx] + rcmaH[pk]*( ex[tk+1] - ex[tk] );
+	Hy[idx] -= 0.5*psi2[pidx];
+}

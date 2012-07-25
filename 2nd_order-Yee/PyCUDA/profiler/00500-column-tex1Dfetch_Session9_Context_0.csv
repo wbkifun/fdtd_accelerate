@@ -1,0 +1,19 @@
+# CUDA_PROFILE_LOG_VERSION 1.6
+# CUDA_PROFILE_CSV 1
+# TIMESTAMPFACTOR fffff7217daffea0
+# CUDA_DEVICE 0 GeForce GTX 280
+gpustarttimestamp,method,gputime,cputime,occupancy,gridSizeX,gridSizeY,blockSizeX,blockSizeY,blockSizeZ,dynSmemPerBlock,staSmemPerBlock,registerPerThread,streamID,memTransferSize,memtransferhostmemtype,branch,divergent_branch,instructions,warp_serialize,cta_launched,local_load,local_store,gld_32b,gld_64b,gld_128b,gst_32b,gst_64b,gst_128b,tex_cache_hit,tex_cache_miss
+11c0d37d994d70e0,memcpyHtoD,11241.4,11432,,,,,,,,,,0,62914560,0
+11c0d37d99fe4180,memcpyHtoD,11066.4,11243,,,,,,,,,,0,62914560,0
+11c0d37d9aac5c20,memcpyHtoD,11087.6,11266,,,,,,,,,,0,62914560,0
+11c0d37d9b5ac860,memcpyHtoD,11086,11262,,,,,,,,,,0,62914560,0
+11c0d37d9c092780,memcpyHtoD,11070.3,11247,,,,,,,,,,0,62914560,0
+11c0d37d9cb75d20,memcpyHtoD,11055.5,11233,,,,,,,,,,0,62914560,0
+11c0d37d9d655ea0,memcpyHtoD,11007.3,11182,,,,,,,,,,0,62914560,0
+11c0d37d9e1289e0,memcpyHtoD,11006.9,11182,,,,,,,,,,0,62914560,0
+11c0d37d9ebfbe20,memcpyHtoD,11015.4,11193,,,,,,,,,,0,62914560,0
+11c0d37d9f71d180,memcpyHtoA,12222.4,12275,,,,,,,,,,0,62914560,0
+11c0d37da02d7c20,memcpyHtoA,12201.3,12252,,,,,,,,,,0,62914560,0
+11c0d37da0e8c300,memcpyHtoA,12212.7,2,,,,,,,,,,0,62914560,0
+11c0d37da30e0300,e_naive,10909.9,10927,1,61440,1,256,1,1,0,88,10,0,,0,116728,4088,2064152,0,6144,0,0,94024,1674928,89936,0,4328143,0,0,0
+11c0d37da3b73cc0,e_naive_tex,11267,11298,1,61440,1,256,1,1,0,64,13,0,,0,116728,4088,2096657,0,6144,0,0,94024,1380784,89936,0,4975657,0,26264,1150312

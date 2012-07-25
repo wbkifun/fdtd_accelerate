@@ -1,0 +1,10 @@
+<!DOCTYPE cpj>
+<cpj version="1.0" >
+ <session>
+  <name>last</name>
+  <progpath>"/home/kifang/kuFDTD/v0.1.0/dim3/gpu/test/011-dielectric.py"</progpath>
+  <workdirpath>/home/kifang/kuFDTD/v0.1.0/dim3/gpu/test</workdirpath>
+  <datetime>14 Jun 2009 22:08:32</datetime>
+ </session>
+</cpj>
+

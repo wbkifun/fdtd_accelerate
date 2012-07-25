@@ -1,0 +1,46 @@
+N(250,250,320), TMAX=100000
+Nz is a multiple of 16.
+Npml=15
+select TPB,BPG: main
+        Nsurplus_plane=80000, Nsurplus=256
+        Ntot=20000000, TPB=512
+        BPG=39063, sBPG(1)=39063, Ns_main=6152
+source: TPB=320, BPG=1
+select TPB,BPG: pml x
+        Nsurplus_plane=80000, Nsurplus=128
+        Ntot=1200000, TPB=512
+        BPG=2344
+select TPB,BPG: pml y
+        Nsurplus_plane=4800, Nsurplus=128
+        Ntot=1200000, TPB=512
+        BPG=2344
+select TPB,BPG: pml z
+        BPG=1954, Ns_pmlz=4104
+select TPB,BPG: main init
+        TPB=512, BPG=39375, sBPG(1)=39375
+select TPB,BPG: main init
+        TPB=512, BPG=39375, sBPG(1)=39375
+
+tstep=100000    01:06:18 (3978)
+
+CPU: Core2Duo
+N(250,250,320), TMAX=10000
+NPML=15
+tstep=10001     04:05:49 (14749)
+
+
+Npml=10
+select TPB,BPG: pml x
+        Nsurplus_plane=80000, Nsurplus=256
+        Ntot=800000, TPB=512
+        BPG=1563
+select TPB,BPG: pml y
+        Nsurplus_plane=3200, Nsurplus=256
+        Ntot=800000, TPB=512
+        BPG=1563
+select TPB,BPG: pml z
+        BPG=1343, Ns_pmlz=4104
+
+tstep=100000    01:03:18 (3798)
+
+

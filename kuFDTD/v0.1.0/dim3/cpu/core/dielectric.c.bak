@@ -1,0 +1,154 @@
+/*
+ Author : Kim Ki-hwan (wbkifun@korea.ac.kr)
+          Kim, KyoungHo (rain_woo@korea.ac.kr)
+
+ Written date : 2009. 6. 18
+
+ Copyright : GNU GPL
+*/
+
+#include <base.h>
+
+
+static PyObject *update_e(PyObject *self, PyObject *args) {
+	int Ncore, Ntot, Ny, Nz;
+	PyArrayObject *Ex, *Ey, *Ez;
+	PyArrayObject *Hx, *Hy, *Hz;
+	PyArrayObject *CEx, *CEy, *CEz;
+
+	if (!PyArg_ParseTuple(args, "iiii000000000",
+				&Ncore,
+				&Ntot, &Ny, &Nz,
+				&Ex, &Ey, &Ez,
+				&Hx, &Hy, &Hz,
+				&CEx, &CEy, &CEz ))
+   	{
+		return NULL;
+   	}
+
+	int idx, i;
+	int Nyz = Ny*Nz;
+	int c1 = (Ny-1)*Nz, c2 = Nyz + Nz;
+	v4sf e, ce, h1, h2, h3, h4; 
+
+	/*
+	omp_set_num_threads( Ncore );
+	#pragma omp parallel for \
+	shared( Ntot, Nz, Nyz, c1, c2, Ex, Ey, Ez, Hx, Hy, Hz, CEx, CEy, CEz ) \
+   	private( e, ce, h1, h2, h3, h4, idx, i ) \
+	schedule( static )
+	*/
+	for ( idx=0; idx<Ntot; idx+=4 ) {
+		i = idx + idx/c1*Nz + c2;
+
+		e  = LOAD( &((float*)(Ex->data))[i]		);
+		ce = LOAD( &((float*)(CEx->data))[i]	);
+		h1 = LOAD( &((float*)(Hz->data))[i+Nz]	);
+		h2 = LOAD( &((float*)(Hz->data))[i]		);
+		h3 = LOAD( &((float*)(Hy->data))[i+1]	);
+		h4 = LOAD( &((float*)(Hy->data))[i]		);
+		STORE( &((float*)(Ex->data))[i], ADD(e, MUL(ce, SUB( SUB(h1,h2), SUB(h3,h4)))) ); 
+
+		e  = LOAD( &((float*)(Ey->data))[i]		);
+		ce = LOAD( &((float*)(CEy->data))[i]	);
+		h1 = LOAD( &((float*)(Hx->data))[i+1]	);
+		h2 = LOAD( &((float*)(Hx->data))[i]		);
+		h3 = LOAD( &((float*)(Hz->data))[i+Nyz]	);
+		h4 = LOAD( &((float*)(Hz->data))[i]		);
+		STORE( &((float*)(Ey->data))[i], ADD(e, MUL(ce, SUB( SUB(h1,h2), SUB(h3,h4)))) ); 
+
+		e  = LOAD( &((float*)(Ez->data))[i]		);
+		ce = LOAD( &((float*)(CEz->data))[i]	);
+		h1 = LOAD( &((float*)(Hy->data))[i+Nyz]	);
+		h2 = LOAD( &((float*)(Hy->data))[i]		);
+		h3 = LOAD( &((float*)(Hx->data))[i+Nz]	);
+		h4 = LOAD( &((float*)(Hx->data))[i]		);
+		STORE( &((float*)(Ez->data))[i], ADD(e, MUL(ce, SUB( SUB(h1,h2), SUB(h3,h4)))) ); 
+	}
+
+   	Py_INCREF(Py_None);
+   	return Py_None;
+}
+
+
+
+static PyObject *update_h(PyObject *self, PyObject *args) {
+	int Ncore, Ntot, Ny, Nz;
+	PyArrayObject *Ex, *Ey, *Ez;
+	PyArrayObject *Hx, *Hy, *Hz;
+
+	if (!PyArg_ParseTuple(args, "iiii000000",
+				&Ncore,
+				&Ntot, &Ny, &Nz,
+				&Ex, &Ey, &Ez,
+				&Hx, &Hy, &Hz ))
+   	{
+		return NULL;
+   	}
+
+	int idx, i;
+	int Nyz = Ny*Nz;
+	int c1 = (Ny-1)*Nz, c2 = Nyz + Nz;
+	v4sf h, e1, e2, e3, e4; 
+	v4sf ch = {0.5, 0.5, 0.5, 0.5};
+
+	/*
+	omp_set_num_threads( Ncore );
+	#pragma omp parallel for \
+	shared( Ntot, Nz, Nyz, c1, c2, ch, Ex, Ey, Ez, Hx, Hy, Hz ) \
+   	private( h, e1, e2, e3, e4, idx, i ) \
+	schedule( static )
+	*/
+	for ( idx=0; idx<Ntot; idx+=4 ) {
+		i = idx + idx/c1*Nz + c2;
+
+		h  = LOAD( &((float*)(Hx->data))[i]		);
+		e1 = LOAD( &((float*)(Ez->data))[i]	);
+		e2 = LOAD( &((float*)(Ez->data))[i-Nz]		);
+		e3 = LOAD( &((float*)(Ey->data))[i]	);
+		e4 = LOAD( &((float*)(Ey->data))[i-1]		);
+		STORE( &((float*)(Hx->data))[i], ADD(h, MUL(ch, SUB( SUB(e1,e2), SUB(e3,e4)))) ); 
+
+		h  = LOAD( &((float*)(Hy->data))[i]		);
+		e1 = LOAD( &((float*)(Ex->data))[i]	);
+		e2 = LOAD( &((float*)(Ex->data))[i-1]		);
+		e3 = LOAD( &((float*)(Ez->data))[i]	);
+		e4 = LOAD( &((float*)(Ez->data))[i-Nyz]		);
+		STORE( &((float*)(Hy->data))[i], ADD(h, MUL(ch, SUB( SUB(e1,e2), SUB(e3,e4)))) ); 
+
+		h  = LOAD( &((float*)(Hz->data))[i]		);
+		e1 = LOAD( &((float*)(Ey->data))[i]	);
+		e2 = LOAD( &((float*)(Ey->data))[i-Nyz]		);
+		e3 = LOAD( &((float*)(Ex->data))[i]	);
+		e4 = LOAD( &((float*)(Ex->data))[i-Nz]		);
+		STORE( &((float*)(Hz->data))[i], ADD(h, MUL(ch, SUB( SUB(e1,e2), SUB(e3,e4)))) ); 
+	}
+
+   	Py_INCREF(Py_None);
+   	return Py_None;
+}
+
+
+
+/*
+===============================================================================
+ * method table listing
+ * module's initialization
+===============================================================================
+*/
+static char update_e_doc[] = "update_e( Ncore, Ntot, Ny, Nz, Ex, Ey, Ez, Hx, Hy, Hz, CEx, CEy, CEz )";
+static char update_h_doc[] = "updatei_h( Ncore, Ntot, Ny, Nz, Ex, Ey, Ez, Hx, Hy, Hz )";
+static char module_doc[] = "module dielectric:\n\
+	update_e( Ncore, Ntot, Ny, Nz, Ex, Ey, Ez, Hx, Hy, Hz, CEx, CEy, CEz )\n\
+	update_h( Ncore, Ntot, Ny, Nz, Ex, Ey, Ez, Hx, Hy, Hz )";
+
+static PyMethodDef dielectric_methods[] = {
+	{"update_e", update_e, METH_VARARGS, update_e_doc},
+	{"update_h", update_h, METH_VARARGS, update_h_doc},
+	{NULL, NULL, 0, NULL}
+};
+
+PyMODINIT_FUNC initdielectric() {
+	Py_InitModule3("dielectric", dielectric_methods, module_doc);
+	import_array();
+}

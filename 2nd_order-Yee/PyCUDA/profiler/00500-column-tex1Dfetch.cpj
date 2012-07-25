@@ -1,0 +1,204 @@
+<!DOCTYPE cpj>
+<cpj version="1.2" >
+ <session>
+  <name>Session1</name>
+  <progpath>"/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA/0030-update_e.py"</progpath>
+  <workdirpath>/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA</workdirpath>
+  <datetime>16 Jul 2010 03:03:06</datetime>
+  <normalizedcounter>false</normalizedcounter>
+  <device multProcessorCount="30" warpSize="32" textureAlignment="256" maxRegPerBlock="16384" computeCapability="1.3" maxThreadPerBlock="512" totalConstMem="65536" maxGridDim="65535 65535" maxShareMemPerBlock="16384" id="0" maxBlockDim="512 512 64" GpuOverlap="1" name="GeForce GTX 280" label="Device_0" clockFreq="1458000" maxPitchMem="2147483647" >
+   <context totalcountercount="0" invalidcountercount="0" id="0" label="Context_0" truncatedcountercount="0" />
+  </device>
+ </session>
+ <session>
+  <name>Session2</name>
+  <progpath>"/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA/0030-update_e.py"</progpath>
+  <workdirpath>/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA</workdirpath>
+  <datetime>16 Jul 2010 03:13:51</datetime>
+  <normalizedcounter>false</normalizedcounter>
+  <device multProcessorCount="30" warpSize="32" textureAlignment="256" maxRegPerBlock="16384" computeCapability="1.3" maxThreadPerBlock="512" totalConstMem="65536" maxGridDim="65535 65535" maxShareMemPerBlock="16384" id="0" maxBlockDim="512 512 64" GpuOverlap="1" name="GeForce GTX 280" label="Device_0" clockFreq="1458000" maxPitchMem="2147483647" >
+   <context totalcountercount="0" invalidcountercount="0" id="0" label="Context_0" truncatedcountercount="0" />
+  </device>
+ </session>
+ <session>
+  <name>Session3</name>
+  <progpath>"/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA/0030-update_e.py"</progpath>
+  <workdirpath>/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA</workdirpath>
+  <datetime>16 Jul 2010 04:40:32</datetime>
+  <normalizedcounter>false</normalizedcounter>
+  <device multProcessorCount="30" warpSize="32" textureAlignment="256" maxRegPerBlock="16384" computeCapability="1.3" maxThreadPerBlock="512" totalConstMem="65536" maxGridDim="65535 65535" maxShareMemPerBlock="16384" id="0" maxBlockDim="512 512 64" GpuOverlap="1" name="GeForce GTX 280" label="Device_0" clockFreq="1458000" maxPitchMem="2147483647" >
+   <context totalcountercount="0" invalidcountercount="0" id="0" label="Context_0" truncatedcountercount="0" />
+  </device>
+ </session>
+ <session>
+  <name>Session4</name>
+  <progpath>"/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA/0030-update_e.py"</progpath>
+  <workdirpath>/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA</workdirpath>
+  <datetime>16 Jul 2010 04:50:14</datetime>
+  <normalizedcounter>false</normalizedcounter>
+  <device multProcessorCount="30" warpSize="32" textureAlignment="256" maxRegPerBlock="16384" computeCapability="1.3" maxThreadPerBlock="512" totalConstMem="65536" maxGridDim="65535 65535" maxShareMemPerBlock="16384" id="0" maxBlockDim="512 512 64" GpuOverlap="1" name="GeForce GTX 280" label="Device_0" clockFreq="1458000" maxPitchMem="2147483647" >
+   <context totalcountercount="0" invalidcountercount="0" id="0" label="Context_0" truncatedcountercount="0" />
+  </device>
+ </session>
+ <session>
+  <name>Session5</name>
+  <progpath>"/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA/0030-update_e.py"</progpath>
+  <workdirpath>/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA</workdirpath>
+  <datetime>16 Jul 2010 06:14:14</datetime>
+  <normalizedcounter>false</normalizedcounter>
+  <device multProcessorCount="30" warpSize="32" textureAlignment="256" maxRegPerBlock="16384" computeCapability="1.3" maxThreadPerBlock="512" totalConstMem="65536" maxGridDim="65535 65535" maxShareMemPerBlock="16384" id="0" maxBlockDim="512 512 64" GpuOverlap="1" name="GeForce GTX 280" label="Device_0" clockFreq="1458000" maxPitchMem="2147483647" >
+   <context totalcountercount="0" invalidcountercount="0" id="0" label="Context_0" truncatedcountercount="0" />
+  </device>
+ </session>
+ <session>
+  <name>Session6</name>
+  <progpath>"/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA/0030-update_e.py"</progpath>
+  <workdirpath>/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA</workdirpath>
+  <datetime>16 Jul 2010 06:58:47</datetime>
+  <normalizedcounter>false</normalizedcounter>
+  <device multProcessorCount="30" warpSize="32" textureAlignment="256" maxRegPerBlock="16384" computeCapability="1.3" maxThreadPerBlock="512" totalConstMem="65536" maxGridDim="65535 65535" maxShareMemPerBlock="16384" id="0" maxBlockDim="512 512 64" GpuOverlap="1" name="GeForce GTX 280" label="Device_0" clockFreq="1458000" maxPitchMem="2147483647" >
+   <context totalcountercount="0" invalidcountercount="0" id="0" label="Context_0" truncatedcountercount="0" />
+  </device>
+ </session>
+ <session>
+  <name>Session7</name>
+  <progpath>"/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA/0030-update_e.py"</progpath>
+  <workdirpath>/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA</workdirpath>
+  <datetime>16 Jul 2010 07:01:09</datetime>
+  <normalizedcounter>false</normalizedcounter>
+  <device multProcessorCount="30" warpSize="32" textureAlignment="256" maxRegPerBlock="16384" computeCapability="1.3" maxThreadPerBlock="512" totalConstMem="65536" maxGridDim="65535 65535" maxShareMemPerBlock="16384" id="0" maxBlockDim="512 512 64" GpuOverlap="1" name="GeForce GTX 280" label="Device_0" clockFreq="1458000" maxPitchMem="2147483647" >
+   <context totalcountercount="0" invalidcountercount="0" id="0" label="Context_0" truncatedcountercount="0" />
+  </device>
+ </session>
+ <session>
+  <name>Session8</name>
+  <progpath>"/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA/0030-update_e.py"</progpath>
+  <workdirpath>/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA</workdirpath>
+  <datetime>16 Jul 2010 07:03:02</datetime>
+  <normalizedcounter>false</normalizedcounter>
+  <device multProcessorCount="30" warpSize="32" textureAlignment="256" maxRegPerBlock="16384" computeCapability="1.3" maxThreadPerBlock="512" totalConstMem="65536" maxGridDim="65535 65535" maxShareMemPerBlock="16384" id="0" maxBlockDim="512 512 64" GpuOverlap="1" name="GeForce GTX 280" label="Device_0" clockFreq="1458000" maxPitchMem="2147483647" >
+   <context totalcountercount="0" invalidcountercount="0" id="0" label="Context_0" truncatedcountercount="0" />
+  </device>
+ </session>
+ <session>
+  <name>Session9</name>
+  <progpath>"/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA/0040-update_e-column.py"</progpath>
+  <workdirpath>/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA</workdirpath>
+  <datetime>16 Jul 2010 07:16:20</datetime>
+  <normalizedcounter>false</normalizedcounter>
+  <device multProcessorCount="30" warpSize="32" textureAlignment="256" maxRegPerBlock="16384" computeCapability="1.3" maxThreadPerBlock="512" totalConstMem="65536" maxGridDim="65535 65535" maxShareMemPerBlock="16384" id="0" maxBlockDim="512 512 64" GpuOverlap="1" name="GeForce GTX 280" label="Device_0" clockFreq="1458000" maxPitchMem="2147483647" >
+   <context totalcountercount="0" invalidcountercount="0" id="0" label="Context_0" truncatedcountercount="0" />
+  </device>
+ </session>
+ <session>
+  <name>Session10</name>
+  <progpath>"/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA/0040-update_e-column.py"</progpath>
+  <workdirpath>/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA</workdirpath>
+  <datetime>16 Jul 2010 07:24:25</datetime>
+  <normalizedcounter>false</normalizedcounter>
+  <device multProcessorCount="30" warpSize="32" textureAlignment="256" maxRegPerBlock="16384" computeCapability="1.3" maxThreadPerBlock="512" totalConstMem="65536" maxGridDim="65535 65535" maxShareMemPerBlock="16384" id="0" maxBlockDim="512 512 64" GpuOverlap="1" name="GeForce GTX 280" label="Device_0" clockFreq="1458000" maxPitchMem="2147483647" >
+   <context totalcountercount="0" invalidcountercount="0" id="0" label="Context_0" truncatedcountercount="0" />
+  </device>
+ </session>
+ <session>
+  <name>Session11</name>
+  <progpath>"/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA/0040-update_e-column.py"</progpath>
+  <workdirpath>/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA</workdirpath>
+  <datetime>16 Jul 2010 07:32:18</datetime>
+  <normalizedcounter>false</normalizedcounter>
+  <device multProcessorCount="30" warpSize="32" textureAlignment="256" maxRegPerBlock="16384" computeCapability="1.3" maxThreadPerBlock="512" totalConstMem="65536" maxGridDim="65535 65535" maxShareMemPerBlock="16384" id="0" maxBlockDim="512 512 64" GpuOverlap="1" name="GeForce GTX 280" label="Device_0" clockFreq="1458000" maxPitchMem="2147483647" >
+   <context totalcountercount="0" invalidcountercount="0" id="0" label="Context_0" truncatedcountercount="0" />
+  </device>
+ </session>
+ <session>
+  <name>Session12</name>
+  <progpath>"/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA/0040-update_e-column.py"</progpath>
+  <workdirpath>/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA</workdirpath>
+  <datetime>16 Jul 2010 07:37:10</datetime>
+  <normalizedcounter>false</normalizedcounter>
+  <device multProcessorCount="30" warpSize="32" textureAlignment="256" maxRegPerBlock="16384" computeCapability="1.3" maxThreadPerBlock="512" totalConstMem="65536" maxGridDim="65535 65535" maxShareMemPerBlock="16384" id="0" maxBlockDim="512 512 64" GpuOverlap="1" name="GeForce GTX 280" label="Device_0" clockFreq="1458000" maxPitchMem="2147483647" >
+   <context totalcountercount="0" invalidcountercount="0" id="0" label="Context_0" truncatedcountercount="0" />
+  </device>
+ </session>
+ <session>
+  <name>Session13</name>
+  <progpath>"/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA/0040-update_e-column.py"</progpath>
+  <workdirpath>/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA</workdirpath>
+  <datetime>16 Jul 2010 07:39:57</datetime>
+  <normalizedcounter>false</normalizedcounter>
+  <device multProcessorCount="30" warpSize="32" textureAlignment="256" maxRegPerBlock="16384" computeCapability="1.3" maxThreadPerBlock="512" totalConstMem="65536" maxGridDim="65535 65535" maxShareMemPerBlock="16384" id="0" maxBlockDim="512 512 64" GpuOverlap="1" name="GeForce GTX 280" label="Device_0" clockFreq="1458000" maxPitchMem="2147483647" >
+   <context totalcountercount="0" invalidcountercount="0" id="0" label="Context_0" truncatedcountercount="0" />
+  </device>
+ </session>
+ <session>
+  <name>Session14</name>
+  <progpath>"/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA/0040-update_e-column.py"</progpath>
+  <workdirpath>/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA</workdirpath>
+  <datetime>16 Jul 2010 07:49:53</datetime>
+  <normalizedcounter>false</normalizedcounter>
+  <device multProcessorCount="30" warpSize="32" textureAlignment="256" maxRegPerBlock="16384" computeCapability="1.3" maxThreadPerBlock="512" totalConstMem="65536" maxGridDim="65535 65535" maxShareMemPerBlock="16384" id="0" maxBlockDim="512 512 64" GpuOverlap="1" name="GeForce GTX 280" label="Device_0" clockFreq="1458000" maxPitchMem="2147483647" >
+   <context totalcountercount="0" invalidcountercount="0" id="0" label="Context_0" truncatedcountercount="0" />
+  </device>
+ </session>
+ <session>
+  <name>Session15</name>
+  <progpath>"/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA/0040-update_e-column.py"</progpath>
+  <workdirpath>/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA</workdirpath>
+  <datetime>16 Jul 2010 07:53:13</datetime>
+  <normalizedcounter>false</normalizedcounter>
+  <device multProcessorCount="30" warpSize="32" textureAlignment="256" maxRegPerBlock="16384" computeCapability="1.3" maxThreadPerBlock="512" totalConstMem="65536" maxGridDim="65535 65535" maxShareMemPerBlock="16384" id="0" maxBlockDim="512 512 64" GpuOverlap="1" name="GeForce GTX 280" label="Device_0" clockFreq="1458000" maxPitchMem="2147483647" >
+   <context totalcountercount="0" invalidcountercount="0" id="0" label="Context_0" truncatedcountercount="0" />
+  </device>
+ </session>
+ <session>
+  <name>Session16</name>
+  <progpath>"/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA/0050-update_e-column-tex1Dfetch.py"</progpath>
+  <workdirpath>/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA</workdirpath>
+  <datetime>16 Jul 2010 08:05:41</datetime>
+  <normalizedcounter>false</normalizedcounter>
+  <device multProcessorCount="30" warpSize="32" textureAlignment="256" maxRegPerBlock="16384" computeCapability="1.3" maxThreadPerBlock="512" totalConstMem="65536" maxGridDim="65535 65535" maxShareMemPerBlock="16384" id="0" maxBlockDim="512 512 64" GpuOverlap="1" name="GeForce GTX 280" label="Device_0" clockFreq="1458000" maxPitchMem="2147483647" >
+   <context totalcountercount="0" invalidcountercount="0" id="0" label="Context_0" truncatedcountercount="0" />
+  </device>
+ </session>
+ <session>
+  <name>Session17</name>
+  <progpath>"/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA/0050-update_e-column-tex1Dfetch.py"</progpath>
+  <workdirpath>/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA</workdirpath>
+  <datetime>16 Jul 2010 08:47:18</datetime>
+  <normalizedcounter>false</normalizedcounter>
+  <device multProcessorCount="30" warpSize="32" textureAlignment="256" maxRegPerBlock="16384" computeCapability="1.3" maxThreadPerBlock="512" totalConstMem="65536" maxGridDim="65535 65535" maxShareMemPerBlock="16384" id="0" maxBlockDim="512 512 64" GpuOverlap="1" name="GeForce GTX 280" label="Device_0" clockFreq="1458000" maxPitchMem="2147483647" >
+   <context totalcountercount="0" invalidcountercount="0" id="0" label="Context_0" truncatedcountercount="0" />
+  </device>
+ </session>
+ <session>
+  <name>Session18</name>
+  <progpath>"/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA/0050-update_e-column-tex1Dfetch.py"</progpath>
+  <workdirpath>/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA</workdirpath>
+  <datetime>16 Jul 2010 08:53:20</datetime>
+  <normalizedcounter>false</normalizedcounter>
+  <device multProcessorCount="30" warpSize="32" textureAlignment="256" maxRegPerBlock="16384" computeCapability="1.3" maxThreadPerBlock="512" totalConstMem="65536" maxGridDim="65535 65535" maxShareMemPerBlock="16384" id="0" maxBlockDim="512 512 64" GpuOverlap="1" name="GeForce GTX 280" label="Device_0" clockFreq="1458000" maxPitchMem="2147483647" >
+   <context totalcountercount="0" invalidcountercount="0" id="0" label="Context_0" truncatedcountercount="0" />
+  </device>
+ </session>
+ <session>
+  <name>Session19</name>
+  <progpath>"/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA/0050-update_e-column-tex1Dfetch.py"</progpath>
+  <workdirpath>/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA</workdirpath>
+  <datetime>16 Jul 2010 08:57:17</datetime>
+  <normalizedcounter>false</normalizedcounter>
+  <device multProcessorCount="30" warpSize="32" textureAlignment="256" maxRegPerBlock="16384" computeCapability="1.3" maxThreadPerBlock="512" totalConstMem="65536" maxGridDim="65535 65535" maxShareMemPerBlock="16384" id="0" maxBlockDim="512 512 64" GpuOverlap="1" name="GeForce GTX 280" label="Device_0" clockFreq="1458000" maxPitchMem="2147483647" >
+   <context totalcountercount="0" invalidcountercount="0" id="0" label="Context_0" truncatedcountercount="0" />
+  </device>
+ </session>
+ <session>
+  <name>Session20</name>
+  <progpath>"/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA/0050-update_e-column-tex1Dfetch.py"</progpath>
+  <workdirpath>/home/kifang/FDTD-acclerated/2nd_order-Yee/PyCUDA</workdirpath>
+  <datetime>16 Jul 2010 09:01:23</datetime>
+  <normalizedcounter>false</normalizedcounter>
+  <device multProcessorCount="30" warpSize="32" textureAlignment="256" maxRegPerBlock="16384" computeCapability="1.3" maxThreadPerBlock="512" totalConstMem="65536" maxGridDim="65535 65535" maxShareMemPerBlock="16384" id="0" maxBlockDim="512 512 64" GpuOverlap="1" name="GeForce GTX 280" label="Device_0" clockFreq="1458000" maxPitchMem="2147483647" >
+   <context totalcountercount="0" invalidcountercount="0" id="0" label="Context_0" truncatedcountercount="0" />
+  </device>
+ </session>
+</cpj>
+

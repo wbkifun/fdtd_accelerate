@@ -1,0 +1,52 @@
+<!DOCTYPE cpj>
+<cpj version="1.0" >
+ <session>
+  <name>010</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/010-base-nested_if.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>24 Nov 2009 11:49:08</datetime>
+ </session>
+ <session>
+  <name>020-coeff-prefix</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/020-block1d-grid1d.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>24 Nov 2009 12:09:52</datetime>
+ </session>
+ <session>
+  <name>210-texture</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/210-block1d-grid1d-texture.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>24 Nov 2009 19:16:35</datetime>
+ </session>
+ <session>
+  <name>220-block1d-texture</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/220-block1d-grid1d-texture-field.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>24 Nov 2009 19:34:57</datetime>
+ </session>
+ <session>
+  <name>240-block3d-texture</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/240-block3d-grid2d-texture.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>24 Nov 2009 23:36:59</datetime>
+ </session>
+ <session>
+  <name>230-block2d-texture</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/230-block2d-grid2d-texture.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>25 Nov 2009 00:10:55</datetime>
+ </session>
+ <session>
+  <name>310-block1d-texture-smem</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/310-block1d-texture-smem.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>25 Nov 2009 00:33:24</datetime>
+ </session>
+ <session>
+  <name>102-block1d-smem</name>
+  <progpath>"/home/kifang/FDTD_PyCUDA/102-block1d-smem-register-column_major.py"</progpath>
+  <workdirpath>/home/kifang/FDTD_PyCUDA</workdirpath>
+  <datetime>25 Nov 2009 01:02:55</datetime>
+ </session>
+</cpj>
+

@@ -1,0 +1,39 @@
+/home/kifang/NVIDIA_GPU_Computing_SDK/C/bin/linux/release/deviceQuery Starting...
+
+ CUDA Device Query (Runtime API) version (CUDART static linking)
+
+There is 1 device supporting CUDA
+
+Device 0: "Tesla C2050"
+  CUDA Driver Version:                           3.10
+  CUDA Runtime Version:                          3.10
+  CUDA Capability Major revision number:         2
+  CUDA Capability Minor revision number:         0
+  Total amount of global memory:                 2817720320 bytes
+  Number of multiprocessors:                     14
+  Number of cores:                               448
+  Total amount of constant memory:               65536 bytes
+  Total amount of shared memory per block:       49152 bytes
+  Total number of registers available per block: 32768
+  Warp size:                                     32
+  Maximum number of threads per block:           1024
+  Maximum sizes of each dimension of a block:    1024 x 1024 x 64
+  Maximum sizes of each dimension of a grid:     65535 x 65535 x 1
+  Maximum memory pitch:                          2147483647 bytes
+  Texture alignment:                             512 bytes
+  Clock rate:                                    1.15 GHz
+  Concurrent copy and execution:                 Yes
+  Run time limit on kernels:                     No
+  Integrated:                                    No
+  Support host page-locked memory mapping:       Yes
+  Compute mode:                                  Default (multiple host threads can use this device simultaneously)
+  Concurrent kernel execution:                   Yes
+  Device has ECC support enabled:                Yes
+
+deviceQuery, CUDA Driver = CUDART, CUDA Driver Version = 3.10, CUDA Runtime Version = 3.10, NumDevs = 1, Device = Tesla C2050
+
+
+PASSED
+
+Press <Enter> to Quit...
+-----------------------------------------------------------

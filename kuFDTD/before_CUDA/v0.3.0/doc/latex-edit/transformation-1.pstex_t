@@ -1,0 +1,27 @@
+\begin{picture}(0,0)%
+\includegraphics{transformation-1.pstex}%
+\end{picture}%
+\setlength{\unitlength}{4144sp}%
+%
+\begingroup\makeatletter\ifx\SetFigFontNFSS\undefined%
+\gdef\SetFigFontNFSS#1#2#3#4#5{%
+  \reset@font\fontsize{#1}{#2pt}%
+  \fontfamily{#3}\fontseries{#4}\fontshape{#5}%
+  \selectfont}%
+\fi\endgroup%
+\begin{picture}(8574,5903)(4714,-4798)
+\put(9676,-4651){\makebox(0,0)[lb]{\smash{{\SetFigFontNFSS{20}{24.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$f(x,y)=0$}%
+}}}}
+\put(8416,-3391){\makebox(0,0)[lb]{\smash{{\SetFigFontNFSS{20}{24.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$\theta$}%
+}}}}
+\put(5356,-4156){\makebox(0,0)[lb]{\smash{{\SetFigFontNFSS{20}{24.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$O$}%
+}}}}
+\put(7966,-3841){\makebox(0,0)[lb]{\smash{{\SetFigFontNFSS{20}{24.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$O'$}%
+}}}}
+\put(6886,-1006){\makebox(0,0)[lb]{\smash{{\SetFigFontNFSS{20}{24.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$x_1$}%
+}}}}
+\put(10216,-1006){\makebox(0,0)[lb]{\smash{{\SetFigFontNFSS{20}{24.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$x_2$}%
+}}}}
+\put(5311,-826){\makebox(0,0)[lb]{\smash{{\SetFigFontNFSS{20}{24.0}{\rmdefault}{\mddefault}{\updefault}{\color[rgb]{0,0,0}$y$}%
+}}}}
+\end{picture}%

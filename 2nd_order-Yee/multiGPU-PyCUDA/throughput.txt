@@ -1,0 +1,23 @@
+grid size: 512x512x335 = 87,818,240
+total grid points: 512x512x335x12 = 1,053,818,880 points
+total used memory: 512x512x335x12x4 = 3.9258 GBytes
+
+
+TESLA C1060
+
+points/sec (1000 tstep)
+CPU (Core i7 920)
+	2037.695394 sec
+	517,162 points/sec
+
+1 GPU
+	171.2254 sec
+	6,154,571 points/sec
+
+2 GPU
+	188.0361 sec
+	11,208,687 pints/sec (x1.82)
+
+3 GPU
+	195.8120 sec
+	16,145,366 pints/sec (x2.62)

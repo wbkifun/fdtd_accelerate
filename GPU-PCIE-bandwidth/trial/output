@@ -1,0 +1,6 @@
+1 1025
+1024
+{'2gpu': <HDF5 group "2gpu" (40 members)>, '1gpu': <HDF5 group "1gpu" (20 members)>, '3gpu': <HDF5 group "3gpu" (60 members)>}
+['gpu00-d2h-004.dset', 'gpu00-d2h-003.dset', 'gpu00-h2d-004.dset', 'gpu00-d2h-000.dset', 'gpu00-h2d-005.dset', 'gpu00-h2d-003.dset', 'gpu00-h2d-008.dset', 'gpu00-h2d-009.dset', 'gpu00-d2h-002.dset', 'gpu00-h2d-007.dset', 'gpu00-h2d-001.dset', 'gpu00-h2d-002.dset', 'gpu00-d2h-009.dset', 'gpu00-h2d-000.dset', 'gpu00-d2h-006.dset', 'gpu00-d2h-005.dset', 'gpu00-d2h-008.dset', 'gpu00-d2h-007.dset', 'gpu00-h2d-006.dset', 'gpu00-d2h-001.dset']
+point:  64 KB
+point:  64 KB

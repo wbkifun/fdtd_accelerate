@@ -1,0 +1,687 @@
+
+__global__ void func00(float *fw, float *fr00) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func01(float *fw, float *fr00, float *fr01) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func02(float *fw, float *fr00, float *fr01, float *fr02) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func03(float *fw, float *fr00, float *fr01, float *fr02, float *fr03) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func04(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func05(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func06(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func07(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func08(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07, float *fr08) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+	f +=  0.216216*fr08[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func09(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07, float *fr08, float *fr09) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+	f +=  0.216216*fr08[idx];
+	f +=  0.243243*fr09[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func10(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07, float *fr08, float *fr09, float *fr10) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+	f +=  0.216216*fr08[idx];
+	f +=  0.243243*fr09[idx];
+	f +=  0.27027*fr10[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func11(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07, float *fr08, float *fr09, float *fr10, float *fr11) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+	f +=  0.216216*fr08[idx];
+	f +=  0.243243*fr09[idx];
+	f +=  0.27027*fr10[idx];
+	f +=  0.297297*fr11[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func12(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07, float *fr08, float *fr09, float *fr10, float *fr11, float *fr12) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+	f +=  0.216216*fr08[idx];
+	f +=  0.243243*fr09[idx];
+	f +=  0.27027*fr10[idx];
+	f +=  0.297297*fr11[idx];
+	f +=  0.324324*fr12[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func13(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07, float *fr08, float *fr09, float *fr10, float *fr11, float *fr12, float *fr13) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+	f +=  0.216216*fr08[idx];
+	f +=  0.243243*fr09[idx];
+	f +=  0.27027*fr10[idx];
+	f +=  0.297297*fr11[idx];
+	f +=  0.324324*fr12[idx];
+	f +=  0.351351*fr13[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func14(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07, float *fr08, float *fr09, float *fr10, float *fr11, float *fr12, float *fr13, float *fr14) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+	f +=  0.216216*fr08[idx];
+	f +=  0.243243*fr09[idx];
+	f +=  0.27027*fr10[idx];
+	f +=  0.297297*fr11[idx];
+	f +=  0.324324*fr12[idx];
+	f +=  0.351351*fr13[idx];
+	f +=  0.378378*fr14[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func15(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07, float *fr08, float *fr09, float *fr10, float *fr11, float *fr12, float *fr13, float *fr14, float *fr15) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+	f +=  0.216216*fr08[idx];
+	f +=  0.243243*fr09[idx];
+	f +=  0.27027*fr10[idx];
+	f +=  0.297297*fr11[idx];
+	f +=  0.324324*fr12[idx];
+	f +=  0.351351*fr13[idx];
+	f +=  0.378378*fr14[idx];
+	f +=  0.405405*fr15[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func16(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07, float *fr08, float *fr09, float *fr10, float *fr11, float *fr12, float *fr13, float *fr14, float *fr15, float *fr16) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+	f +=  0.216216*fr08[idx];
+	f +=  0.243243*fr09[idx];
+	f +=  0.27027*fr10[idx];
+	f +=  0.297297*fr11[idx];
+	f +=  0.324324*fr12[idx];
+	f +=  0.351351*fr13[idx];
+	f +=  0.378378*fr14[idx];
+	f +=  0.405405*fr15[idx];
+	f +=  0.432432*fr16[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func17(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07, float *fr08, float *fr09, float *fr10, float *fr11, float *fr12, float *fr13, float *fr14, float *fr15, float *fr16, float *fr17) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+	f +=  0.216216*fr08[idx];
+	f +=  0.243243*fr09[idx];
+	f +=  0.27027*fr10[idx];
+	f +=  0.297297*fr11[idx];
+	f +=  0.324324*fr12[idx];
+	f +=  0.351351*fr13[idx];
+	f +=  0.378378*fr14[idx];
+	f +=  0.405405*fr15[idx];
+	f +=  0.432432*fr16[idx];
+	f +=  0.459459*fr17[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func18(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07, float *fr08, float *fr09, float *fr10, float *fr11, float *fr12, float *fr13, float *fr14, float *fr15, float *fr16, float *fr17, float *fr18) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+	f +=  0.216216*fr08[idx];
+	f +=  0.243243*fr09[idx];
+	f +=  0.27027*fr10[idx];
+	f +=  0.297297*fr11[idx];
+	f +=  0.324324*fr12[idx];
+	f +=  0.351351*fr13[idx];
+	f +=  0.378378*fr14[idx];
+	f +=  0.405405*fr15[idx];
+	f +=  0.432432*fr16[idx];
+	f +=  0.459459*fr17[idx];
+	f +=  0.486486*fr18[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func19(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07, float *fr08, float *fr09, float *fr10, float *fr11, float *fr12, float *fr13, float *fr14, float *fr15, float *fr16, float *fr17, float *fr18, float *fr19) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+	f +=  0.216216*fr08[idx];
+	f +=  0.243243*fr09[idx];
+	f +=  0.27027*fr10[idx];
+	f +=  0.297297*fr11[idx];
+	f +=  0.324324*fr12[idx];
+	f +=  0.351351*fr13[idx];
+	f +=  0.378378*fr14[idx];
+	f +=  0.405405*fr15[idx];
+	f +=  0.432432*fr16[idx];
+	f +=  0.459459*fr17[idx];
+	f +=  0.486486*fr18[idx];
+	f +=  0.513514*fr19[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func20(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07, float *fr08, float *fr09, float *fr10, float *fr11, float *fr12, float *fr13, float *fr14, float *fr15, float *fr16, float *fr17, float *fr18, float *fr19, float *fr20) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+	f +=  0.216216*fr08[idx];
+	f +=  0.243243*fr09[idx];
+	f +=  0.27027*fr10[idx];
+	f +=  0.297297*fr11[idx];
+	f +=  0.324324*fr12[idx];
+	f +=  0.351351*fr13[idx];
+	f +=  0.378378*fr14[idx];
+	f +=  0.405405*fr15[idx];
+	f +=  0.432432*fr16[idx];
+	f +=  0.459459*fr17[idx];
+	f +=  0.486486*fr18[idx];
+	f +=  0.513514*fr19[idx];
+	f +=  0.540541*fr20[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func21(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07, float *fr08, float *fr09, float *fr10, float *fr11, float *fr12, float *fr13, float *fr14, float *fr15, float *fr16, float *fr17, float *fr18, float *fr19, float *fr20, float *fr21) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+	f +=  0.216216*fr08[idx];
+	f +=  0.243243*fr09[idx];
+	f +=  0.27027*fr10[idx];
+	f +=  0.297297*fr11[idx];
+	f +=  0.324324*fr12[idx];
+	f +=  0.351351*fr13[idx];
+	f +=  0.378378*fr14[idx];
+	f +=  0.405405*fr15[idx];
+	f +=  0.432432*fr16[idx];
+	f +=  0.459459*fr17[idx];
+	f +=  0.486486*fr18[idx];
+	f +=  0.513514*fr19[idx];
+	f +=  0.540541*fr20[idx];
+	f +=  0.567568*fr21[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func22(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07, float *fr08, float *fr09, float *fr10, float *fr11, float *fr12, float *fr13, float *fr14, float *fr15, float *fr16, float *fr17, float *fr18, float *fr19, float *fr20, float *fr21, float *fr22) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+	f +=  0.216216*fr08[idx];
+	f +=  0.243243*fr09[idx];
+	f +=  0.27027*fr10[idx];
+	f +=  0.297297*fr11[idx];
+	f +=  0.324324*fr12[idx];
+	f +=  0.351351*fr13[idx];
+	f +=  0.378378*fr14[idx];
+	f +=  0.405405*fr15[idx];
+	f +=  0.432432*fr16[idx];
+	f +=  0.459459*fr17[idx];
+	f +=  0.486486*fr18[idx];
+	f +=  0.513514*fr19[idx];
+	f +=  0.540541*fr20[idx];
+	f +=  0.567568*fr21[idx];
+	f +=  0.594595*fr22[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func23(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07, float *fr08, float *fr09, float *fr10, float *fr11, float *fr12, float *fr13, float *fr14, float *fr15, float *fr16, float *fr17, float *fr18, float *fr19, float *fr20, float *fr21, float *fr22, float *fr23) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+	f +=  0.216216*fr08[idx];
+	f +=  0.243243*fr09[idx];
+	f +=  0.27027*fr10[idx];
+	f +=  0.297297*fr11[idx];
+	f +=  0.324324*fr12[idx];
+	f +=  0.351351*fr13[idx];
+	f +=  0.378378*fr14[idx];
+	f +=  0.405405*fr15[idx];
+	f +=  0.432432*fr16[idx];
+	f +=  0.459459*fr17[idx];
+	f +=  0.486486*fr18[idx];
+	f +=  0.513514*fr19[idx];
+	f +=  0.540541*fr20[idx];
+	f +=  0.567568*fr21[idx];
+	f +=  0.594595*fr22[idx];
+	f +=  0.621622*fr23[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func24(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07, float *fr08, float *fr09, float *fr10, float *fr11, float *fr12, float *fr13, float *fr14, float *fr15, float *fr16, float *fr17, float *fr18, float *fr19, float *fr20, float *fr21, float *fr22, float *fr23, float *fr24) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+	f +=  0.216216*fr08[idx];
+	f +=  0.243243*fr09[idx];
+	f +=  0.27027*fr10[idx];
+	f +=  0.297297*fr11[idx];
+	f +=  0.324324*fr12[idx];
+	f +=  0.351351*fr13[idx];
+	f +=  0.378378*fr14[idx];
+	f +=  0.405405*fr15[idx];
+	f +=  0.432432*fr16[idx];
+	f +=  0.459459*fr17[idx];
+	f +=  0.486486*fr18[idx];
+	f +=  0.513514*fr19[idx];
+	f +=  0.540541*fr20[idx];
+	f +=  0.567568*fr21[idx];
+	f +=  0.594595*fr22[idx];
+	f +=  0.621622*fr23[idx];
+	f +=  0.648649*fr24[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func25(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07, float *fr08, float *fr09, float *fr10, float *fr11, float *fr12, float *fr13, float *fr14, float *fr15, float *fr16, float *fr17, float *fr18, float *fr19, float *fr20, float *fr21, float *fr22, float *fr23, float *fr24, float *fr25) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+	f +=  0.216216*fr08[idx];
+	f +=  0.243243*fr09[idx];
+	f +=  0.27027*fr10[idx];
+	f +=  0.297297*fr11[idx];
+	f +=  0.324324*fr12[idx];
+	f +=  0.351351*fr13[idx];
+	f +=  0.378378*fr14[idx];
+	f +=  0.405405*fr15[idx];
+	f +=  0.432432*fr16[idx];
+	f +=  0.459459*fr17[idx];
+	f +=  0.486486*fr18[idx];
+	f +=  0.513514*fr19[idx];
+	f +=  0.540541*fr20[idx];
+	f +=  0.567568*fr21[idx];
+	f +=  0.594595*fr22[idx];
+	f +=  0.621622*fr23[idx];
+	f +=  0.648649*fr24[idx];
+	f +=  0.675676*fr25[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func26(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07, float *fr08, float *fr09, float *fr10, float *fr11, float *fr12, float *fr13, float *fr14, float *fr15, float *fr16, float *fr17, float *fr18, float *fr19, float *fr20, float *fr21, float *fr22, float *fr23, float *fr24, float *fr25, float *fr26) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+	f +=  0.216216*fr08[idx];
+	f +=  0.243243*fr09[idx];
+	f +=  0.27027*fr10[idx];
+	f +=  0.297297*fr11[idx];
+	f +=  0.324324*fr12[idx];
+	f +=  0.351351*fr13[idx];
+	f +=  0.378378*fr14[idx];
+	f +=  0.405405*fr15[idx];
+	f +=  0.432432*fr16[idx];
+	f +=  0.459459*fr17[idx];
+	f +=  0.486486*fr18[idx];
+	f +=  0.513514*fr19[idx];
+	f +=  0.540541*fr20[idx];
+	f +=  0.567568*fr21[idx];
+	f +=  0.594595*fr22[idx];
+	f +=  0.621622*fr23[idx];
+	f +=  0.648649*fr24[idx];
+	f +=  0.675676*fr25[idx];
+	f +=  0.702703*fr26[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func27(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07, float *fr08, float *fr09, float *fr10, float *fr11, float *fr12, float *fr13, float *fr14, float *fr15, float *fr16, float *fr17, float *fr18, float *fr19, float *fr20, float *fr21, float *fr22, float *fr23, float *fr24, float *fr25, float *fr26, float *fr27) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+	f +=  0.216216*fr08[idx];
+	f +=  0.243243*fr09[idx];
+	f +=  0.27027*fr10[idx];
+	f +=  0.297297*fr11[idx];
+	f +=  0.324324*fr12[idx];
+	f +=  0.351351*fr13[idx];
+	f +=  0.378378*fr14[idx];
+	f +=  0.405405*fr15[idx];
+	f +=  0.432432*fr16[idx];
+	f +=  0.459459*fr17[idx];
+	f +=  0.486486*fr18[idx];
+	f +=  0.513514*fr19[idx];
+	f +=  0.540541*fr20[idx];
+	f +=  0.567568*fr21[idx];
+	f +=  0.594595*fr22[idx];
+	f +=  0.621622*fr23[idx];
+	f +=  0.648649*fr24[idx];
+	f +=  0.675676*fr25[idx];
+	f +=  0.702703*fr26[idx];
+	f +=  0.72973*fr27[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func28(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07, float *fr08, float *fr09, float *fr10, float *fr11, float *fr12, float *fr13, float *fr14, float *fr15, float *fr16, float *fr17, float *fr18, float *fr19, float *fr20, float *fr21, float *fr22, float *fr23, float *fr24, float *fr25, float *fr26, float *fr27, float *fr28) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+	f +=  0.216216*fr08[idx];
+	f +=  0.243243*fr09[idx];
+	f +=  0.27027*fr10[idx];
+	f +=  0.297297*fr11[idx];
+	f +=  0.324324*fr12[idx];
+	f +=  0.351351*fr13[idx];
+	f +=  0.378378*fr14[idx];
+	f +=  0.405405*fr15[idx];
+	f +=  0.432432*fr16[idx];
+	f +=  0.459459*fr17[idx];
+	f +=  0.486486*fr18[idx];
+	f +=  0.513514*fr19[idx];
+	f +=  0.540541*fr20[idx];
+	f +=  0.567568*fr21[idx];
+	f +=  0.594595*fr22[idx];
+	f +=  0.621622*fr23[idx];
+	f +=  0.648649*fr24[idx];
+	f +=  0.675676*fr25[idx];
+	f +=  0.702703*fr26[idx];
+	f +=  0.72973*fr27[idx];
+	f +=  0.756757*fr28[idx];
+ 
+	fw[idx] = f;
+}
+
+__global__ void func29(float *fw, float *fr00, float *fr01, float *fr02, float *fr03, float *fr04, float *fr05, float *fr06, float *fr07, float *fr08, float *fr09, float *fr10, float *fr11, float *fr12, float *fr13, float *fr14, float *fr15, float *fr16, float *fr17, float *fr18, float *fr19, float *fr20, float *fr21, float *fr22, float *fr23, float *fr24, float *fr25, float *fr26, float *fr27, float *fr28, float *fr29) {
+	int idx = blockDim.x*blockIdx.x + threadIdx.x;
+	float f;
+	f = 0.543*fr00[idx];
+	f +=  0.027027*fr01[idx];
+	f +=  0.0540541*fr02[idx];
+	f +=  0.0810811*fr03[idx];
+	f +=  0.108108*fr04[idx];
+	f +=  0.135135*fr05[idx];
+	f +=  0.162162*fr06[idx];
+	f +=  0.189189*fr07[idx];
+	f +=  0.216216*fr08[idx];
+	f +=  0.243243*fr09[idx];
+	f +=  0.27027*fr10[idx];
+	f +=  0.297297*fr11[idx];
+	f +=  0.324324*fr12[idx];
+	f +=  0.351351*fr13[idx];
+	f +=  0.378378*fr14[idx];
+	f +=  0.405405*fr15[idx];
+	f +=  0.432432*fr16[idx];
+	f +=  0.459459*fr17[idx];
+	f +=  0.486486*fr18[idx];
+	f +=  0.513514*fr19[idx];
+	f +=  0.540541*fr20[idx];
+	f +=  0.567568*fr21[idx];
+	f +=  0.594595*fr22[idx];
+	f +=  0.621622*fr23[idx];
+	f +=  0.648649*fr24[idx];
+	f +=  0.675676*fr25[idx];
+	f +=  0.702703*fr26[idx];
+	f +=  0.72973*fr27[idx];
+	f +=  0.756757*fr28[idx];
+	f +=  0.783784*fr29[idx];
+ 
+	fw[idx] = f;
+}
+
+[  4.09240637   6.98035841  10.25288963  13.5457057   16.76305599
+  20.10456314  23.38982391  26.62408295  29.97878704  33.30879021
+  36.57863121  39.89147186  43.15040016  46.4826046   49.804105
+  53.14644775  56.21660461  59.55757103  62.85377312  66.19261398
+  69.4351265   72.77151489  76.06700439  79.40377274  82.64614334
+  85.98139267  89.27699509  92.61478043  95.85327072  99.1940155 ]
+[ 2.88795204  3.27253122  3.29281607  3.21735029  3.34150715  3.28526077
+  3.23425903  3.35470409  3.33000317  3.269841    3.31284065  3.2589283
+  3.33220444  3.3215004   3.34234276  3.07015686  3.34096642  3.29620209
+  3.33884087  3.24251251  3.3363884   3.2954895   3.33676834  3.24237061
+  3.33524933  3.29560242  3.33778534  3.2384903   3.34074478]

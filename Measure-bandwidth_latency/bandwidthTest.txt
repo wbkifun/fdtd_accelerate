@@ -1,0 +1,20 @@
+/home/kifang/NVIDIA_GPU_Computing_SDK/C/bin/linux/release/bandwidthTest Starting...
+
+Running on...
+
+ Device 0: Tesla C2050
+ Range Mode
+
+ Device to Device Bandwidth, 1 Device(s)
+   Transfer Size (Bytes)	Bandwidth(MB/s)
+   62913536			84482.8
+   62914560			84628.1
+   62915584			84815.4
+
+
+[bandwidthTest] - Test results:
+PASSED
+
+
+Press <Enter> to Quit...
+-----------------------------------------------------------

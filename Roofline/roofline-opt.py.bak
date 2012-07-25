@@ -1,0 +1,65 @@
+#!/usr/bin/env python
+
+import numpy as np
+from matplotlib.pyplot import *
+
+xmin, xmax = 2**-4, 2**-1
+ymin, ymax = 2**1, 2**6
+
+fig = figure(dpi=150)
+ax = fig.add_subplot(111, autoscale_on=False, xlim=(xmin,xmax), ylim=(ymin,ymax) )
+ax.set_xscale("log", basex=2)
+ax.set_yscale("log", basey=2)
+ax.set_xticklabels(['1/16','1/8', '1/4', '1/2'])
+ax.set_yticklabels(['', '4', '8', '16', '32', '64'])
+ax.set_xlabel('Operational Intensity (FLOP/Byte)', fontsize=15)
+ax.set_ylabel('Attainable FLOPS (GFLOPS)', fontsize=15)
+ax.grid()
+
+MSIZE = 10	# marker size
+
+ax.plot([xmin, 1051/129.7, xmax], [xmin*129.7, 1051, 1051], lw=2, color='k')
+#ax.plot([0.1630,0.1630], [ymin,21.75], 'ro-', lw=3)
+#ax.plot([0.1786,0.1786], [ymin,23.08], 'ro-', lw=3)
+#ax.plot([0.2339,0.2339], [ymin,31.80], 'ro-', lw=3)
+#ax.plot([0.1630], [21.75], 'ro', markersize=MSIZE)
+#ax.plot([0.1786], [23.08], 'r^', ms=MSIZE)
+#ax.plot([0.2339], [31.80], 'rs', ms=MSIZE)
+ax.plot([0.1667,0.1667], [1,21.75], 'ks-.', ms=MSIZE, markerfacecolor='w')
+ax.plot([0.1786,0.1786], [1,23.08], 'ks-', ms=MSIZE)
+ax.plot([0.2339,0.2339], [1,31.80], 'ks--', ms=MSIZE)
+
+ax.plot([xmin, 936/73.74, xmax], [xmin*73.74, 936, 936], lw=2, color='k')
+#ax.plot([0.1667,0.1667], [ymin,11.62], 'bo-', lw=3)
+#ax.plot([0.1786,0.1786], [ymin,12.41], 'bo-', lw=3)
+#ax.plot([0.2339,0.2339], [ymin,17.49], 'bo-', lw=3)
+#ax.plot([0.1667], [11.62], 'bo', ms=MSIZE)
+#ax.plot([0.1786], [12.41], 'b^', ms=MSIZE)
+#ax.plot([0.2339], [17.49], 'bs', ms=MSIZE)
+ax.plot([0.1667,0.1667], [1,11.62], 'k^-.', ms=MSIZE, mfc='w')
+ax.plot([0.1786,0.1786], [1,12.41], 'k^-', ms=MSIZE)
+ax.plot([0.2339,0.2339], [1,17.49], 'k^--', ms=MSIZE)
+
+ax.plot([xmin, 705/54.98, xmax], [xmin*54.98, 705, 705], lw=2, color='k')
+#ax.plot([0.1071,0.1071], [ymin,5.38], 'ko-', lw=3)
+#ax.plot([0.1786,0.1786], [ymin,9.28], 'ko-', lw=3)
+#ax.plot([0.2339,0.2339], [ymin,12.16], 'ko-', lw=3)
+#ax.plot([0.1071], [5.38], 'ko', ms=MSIZE)
+#ax.plot([0.1786], [9.28], 'k^', ms=MSIZE)
+#ax.plot([0.2339], [12.16], 'ks', ms=MSIZE)
+ax.plot([0.1071,0.1071], [1,5.38], 'ko-.', ms=MSIZE, mfc='w')
+ax.plot([0.1786,0.1786], [1,9.28], 'ko-', ms=MSIZE)
+ax.plot([0.2339,0.2339], [1,12.16], 'ko--', ms=MSIZE)
+
+ax.text(0.07, 0.07*129.7+0.5, 'GeForce GTX 280', fontsize=14, rotation=25)
+ax.text(0.07, 0.07*73.74+0.3, 'TESLA C1060', fontsize=14, rotation=25)
+ax.text(0.07, 0.07*54.98+0.2, 'GeForce 9800 GTX+', fontsize=14, rotation=25)
+
+#ax.text(0.185, 2.2, 'Remove mis-aligned', color='k', rotation=90)
+#ax.text(0.242, 2.2, 'Reduce duplicated', color='k', rotation=90)
+
+ax.plot([0], [0], 'k-.', ms=MSIZE, markerfacecolor='k', label='Non-optimized')
+ax.plot([0], [0], 'k-', ms=MSIZE, mfc='k', label='Remove mis-aligned')
+ax.plot([0], [0], 'k--', ms=MSIZE, mfc='k', label='Reduce duplicated')
+ax.legend(loc='upper left', numpoints=1)
+show()

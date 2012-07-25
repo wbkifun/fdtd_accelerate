@@ -1,0 +1,14 @@
+<Hardware>
+M/B:	ASUS P6T6 WS Revolution
+CPU:	Intel Core i7 920 @ 2.67GHz 
+GPU:	Nvidia TESLA C1060
+PCIE Expansion System:	Vridge-X100 x8
+
+
+<Software>
+Ubuntu Linux 9.04 (64bit)
+GCC 4.3.3
+CUDA 2.3 ( driver 190.18 64bit )
+python 2.6.2
+pycuda 0.92
+boostmpi 1.38.0.1

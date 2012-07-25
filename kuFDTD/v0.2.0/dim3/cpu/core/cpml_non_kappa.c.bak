@@ -1,0 +1,285 @@
+/*
+ Author : Kim Ki-hwan (wbkifun@korea.ac.kr)
+          Kim, KyoungHo (rain_woo@korea.ac.kr)
+
+ Written date : 2009. 7. 2
+
+ Copyright : GNU GPL
+*/
+
+#include <base.h>
+
+
+static PyObject *update_x_e(PyObject *self, PyObject *args) {
+	int Ncore, Nx, Ny, Nz, Npml, backward;
+	PyArrayObject *Ey, *Ez;
+	PyArrayObject *Hy, *Hz;
+	PyArrayObject *CEy, *CEz;
+	PyArrayObject *Psi1, *Psi2;
+	PyArrayObject *Rcmb, *Rcma;
+
+	if (!PyArg_ParseTuple(args, "iiiiiiOOOOOOOOOO",
+				&Ncore, &Nx, &Ny, &Nz, &Npml, &backward,
+				&Ey, &Ez, &Hy, &Hz, &CEy, &CEz,
+			    &Psi1, &Psi2, &Rcmb, &Rcma ))
+   	{ return NULL; }
+
+	float *ey, *ez, *hy, *hz, *cey, *cez;
+	float *psi1, *psi2, *rcmb, *rcma;
+
+	ey = (float*)(Ey->data);
+	ez = (float*)(Ez->data);
+	hy = (float*)(Hy->data);
+	hz = (float*)(Hz->data);
+	cey = (float*)(CEy->data);
+	cez = (float*)(CEz->data);
+	psi1 = (float*)(Psi1->data);
+	psi2 = (float*)(Psi2->data);
+	rcmb = (float*)(Rcmb->data);
+	rcma = (float*)(Rcma->data);
+
+	int ipml, idx, i, c1;
+	int Nyz = Ny*Nz;
+	v4sf e, ce, h1, h2, psi, tmp;
+	union f4vector rb, ra;
+
+	/*
+	omp_set_num_threads( Ncore );
+	#pragma omp parallel for \
+	shared( Npml, Nyz, ey, ez, hy, hz, cey, cez, psi1, psi2, rcmb, rcma ) \
+   	private( ipml, i, c1, rb, ra, e, ce, h1, h2, psi, tmp ) \
+	schedule( static )
+	*/
+	for ( ipml=0; ipml<Npml; ipml++ ) {
+		for ( i=0; i<4; i++ ) {
+			rb.f[i] = rcmb[ipml+backward*Npml];
+			ra.f[i] = rcma[ipml+backward*Npml];
+		}
+		c1 = ipml*Nyz + Nyz + Nz + backward*(Nx-Npml-2)*Nyz;
+
+		for ( idx=0; idx<(Ny-1)*Nz; idx+=4 ) {
+			i = idx + c1;
+
+			e  = LOAD( ey+i );
+			ce = LOAD( cey+i );
+			h1 = LOAD( hz+i+Nyz );
+			h2 = LOAD( hz+i );
+			psi = LOAD( psi1+idx );
+			tmp = ADD( MUL(rb.v,psi), MUL(ra.v,SUB(h1,h2)) );
+			STORE( psi1+idx, tmp );
+			STORE( ey+i, SUB(e, MUL(ce, tmp)) );
+
+			e  = LOAD( ez+i );
+			ce = LOAD( cez+i );
+			h1 = LOAD( hy+i+Nyz );
+			h2 = LOAD( hy+i );
+			psi = LOAD( psi2+idx );
+			tmp = ADD( MUL(rb.v,psi), MUL(ra.v,SUB(h1,h2)) );
+			STORE( psi2+idx, tmp );
+			STORE( ez+i, ADD(e, MUL(ce, tmp)) );
+
+		}
+	}
+   	Py_INCREF(Py_None);
+   	return Py_None;
+}
+
+
+static PyObject *update_x_h(PyObject *self, PyObject *args) {
+	int Ncore, Nx, Ny, Nz, Npml, backward;
+	PyArrayObject *Ey, *Ez;
+	PyArrayObject *Hy, *Hz;
+	PyArrayObject *Psi1, *Psi2;
+	PyArrayObject *Rcmb, *Rcma;
+
+	if (!PyArg_ParseTuple(args, "iiiiiiOOOOOOOO",
+				&Ncore, &Nx, &Ny, &Nz, &Npml, &backward,
+				&Ey, &Ez, &Hy, &Hz,
+			    &Psi1, &Psi2, &Rcmb, &Rcma ))
+   	{ return NULL; }
+
+	float *ey, *ez, *hy, *hz;
+	float *psi1, *psi2, *rcmb, *rcma;
+
+	ey = (float*)(Ey->data);
+	ez = (float*)(Ez->data);
+	hy = (float*)(Hy->data);
+	hz = (float*)(Hz->data);
+	psi1 = (float*)(Psi1->data);
+	psi2 = (float*)(Psi2->data);
+	rcmb = (float*)(Rcmb->data);
+	rcma = (float*)(Rcma->data);
+
+	int ipml, idx, i, c1;
+	int Nyz = Ny*Nz;
+	v4sf h, e1, e2, psi, tmp;
+	v4sf ch = { 0.5, 0.5, 0.5, 0.5 };
+	union f4vector rb, ra;
+
+	for ( ipml=0; ipml<Npml; ipml++ ) {
+		for ( i=0; i<4; i++ ) {
+			rb.f[i] = rcmb[ipml+backward*Npml];
+			ra.f[i] = rcma[ipml+backward*Npml];
+		}
+		c1 = ipml*Nyz + Nyz + Nz + backward*(Nx-Npml-2)*Nyz;
+
+		for ( idx=0; idx<(Ny-1)*Nz; idx+=4 ) {
+			i = idx + c1;
+
+			h  = LOAD( hy+i );
+			e1 = LOAD( ez+i );
+			e2 = LOAD( ez+i-Nyz );
+			psi = LOAD( psi1+idx );
+			tmp = ADD( MUL(rb.v,psi), MUL(ra.v,SUB(e1,e2)) );
+			STORE( psi1+idx, tmp );
+			STORE( hy+i, ADD(h, MUL(ch, tmp)) );
+
+			h  = LOAD( hz+i );
+			e1 = LOAD( ey+i );
+			e2 = LOAD( ey+i-Nyz );
+			psi = LOAD( psi2+idx );
+			tmp = ADD( MUL(rb.v,psi), MUL(ra.v,SUB(e1,e2)) );
+			STORE( psi2+idx, tmp );
+			STORE( hz+i, SUB(h, MUL(ch, tmp)) );
+		}
+	}
+   	Py_INCREF(Py_None);
+   	return Py_None;
+}
+
+
+
+/*============================================================================
+ * method table listing
+ * module's initialization
+============================================================================*/
+static char update_x_e_doc[] = "";
+static char update_x_h_doc[] = "";
+static char module_doc[] = "";
+static PyMethodDef cpml_non_kappa_methods[] = {
+	{"update_x_e", update_x_e, METH_VARARGS, update_x_e_doc},
+	{"update_x_h", update_x_h, METH_VARARGS, update_x_h_doc},
+	{NULL, NULL, 0, NULL}
+};
+PyMODINIT_FUNC initcpml_non_kappa() {
+	Py_InitModule3("cpml_non_kappa", cpml_non_kappa_methods, module_doc);
+	import_array();
+}
+
+
+/*
+__global__ void update_x_e( int Nx, int Ny, int Nz, float *Ex, float *Ey,float *Ez, float *Hx, float *Hy,float *Hz, float *CEx, float *CEy,float *CEz, float *psi1, float *psi2, int backward ) {
+	int pidx = blockIdx.x*blockDim.x + threadIdx.x;
+	int Nyz = Ny*Nz;
+	int pi = pidx/Nyz + backward*(NPML+1);
+
+	int idx = pidx + ( 1 + backward*(Nx-NPML-2) )*Nyz;
+	int eidx = idx + Nyz;
+
+	psi1[pidx] = rcmbE[pi]*psi1[pidx] + rcmaE[pi]*( Hz[idx+Nyz] - Hz[idx] );
+	Ey[eidx] -= CEy[idx]*psi1[pidx];
+
+	psi2[pidx] = rcmbE[pi]*psi2[pidx] + rcmaE[pi]*( Hy[idx+Nyz] - Hy[idx] );
+	Ez[eidx] += CEz[idx]*psi2[pidx];
+}
+
+
+__global__ void update_x_h( int Nx, int Ny, int Nz, float *Ex, float *Ey,float *Ez, float *Hx, float *Hy,float *Hz, float *psi1, float *psi2, int backward ) {
+	int pidx = blockIdx.x*blockDim.x + threadIdx.x;
+	int Nyz = Ny*Nz;
+	int pi = pidx/Nyz + 1 + backward*(NPML+1);
+
+	int idx = pidx + ( 1 + backward*(Nx-NPML-1) )*Nyz;
+	int eidx = idx + Nyz;
+
+	psi1[pidx] = rcmbH[pi]*psi1[pidx] + rcmaH[pi]*( Ez[eidx] - Ez[eidx-Nyz] );
+	Hy[idx] += 0.5*psi1[pidx];
+
+	psi2[pidx] = rcmbH[pi]*psi2[pidx] + rcmaH[pi]*( Ey[eidx] - Ey[eidx-Nyz] );
+	Hz[idx] -= 0.5*psi2[pidx];
+}
+
+
+__global__ void update_y_e( int Ny, int Nz, float *Ex, float *Ey,float *Ez, float *Hx, float *Hy,float *Hz, float *CEx, float *CEy,float *CEz, float *psi1, float *psi2, int backward ) {
+	int pidx = blockIdx.x*blockDim.x + threadIdx.x;
+	int i = pidx/(NPML*Nz);
+	int pj = ( pidx/Nz )%NPML + backward*(NPML+1);
+
+	int idx = pidx + ( 1 + i*(Ny-NPML) + backward*(Ny-NPML-2) )*Nz;
+	int eidx = idx + Ny*Nz;
+
+	psi1[pidx] = rcmbE[pj]*psi1[pidx] + rcmaE[pj]*( Hx[idx+Nz] - Hx[idx] );
+	Ez[eidx] -= CEz[idx]*psi1[pidx];
+
+	psi2[pidx] = rcmbE[pj]*psi2[pidx] + rcmaE[pj]*( Hz[idx+Nz] - Hz[idx] );
+	Ex[eidx] += CEx[idx]*psi2[pidx];
+}
+
+
+__global__ void update_y_h( int Ny, int Nz, float *Ex, float *Ey,float *Ez, float *Hx, float *Hy,float *Hz, float *psi1, float *psi2, int backward ) {
+	int pidx = blockIdx.x*blockDim.x + threadIdx.x;
+	int i = pidx/(NPML*Nz);
+	int pj = ( pidx/Nz )%NPML + 1 + backward*(NPML+1);
+
+	int idx = pidx + ( 1 + i*(Ny-NPML) + backward*(Ny-NPML-1) )*Nz;
+	int eidx = idx + Ny*Nz;
+
+	psi1[pidx] = rcmbH[pj]*psi1[pidx] + rcmaH[pj]*( Ex[eidx] - Ex[eidx-Nz] );
+	Hz[idx] += 0.5*psi1[pidx];
+
+	psi2[pidx] = rcmbH[pj]*psi2[pidx] + rcmaH[pj]*( Ez[eidx] - Ez[eidx-Nz] );
+	Hx[idx] -= 0.5*psi2[pidx];
+}
+
+
+__global__ void update_z_e( int Ny, int Nz, float *Ex, float *Ey,float *Ez, float *Hx, float *Hy,float *Hz, float *CEx, float *CEy,float *CEz, float *psi1, float *psi2, int backward ) {
+	int tk = threadIdx.x;
+	int pidx = blockIdx.x*blockDim.x + tk;
+	int pk = pidx%NPMLp + backward*NPMLp;
+
+	int idx = pidx + 1 + (pidx/NPMLp)*(Nz-NPMLp) + backward*(Nz-NPMLp-1);
+	int eidx = idx + Ny*Nz;
+
+	extern __shared__ float hs[];
+	float* hx = (float*) hs;
+	float* hy = (float*) &hx[blockDim.x+1];
+
+	hx[tk] = Hx[idx];
+	hy[tk] = Hy[idx];
+	__syncthreads();
+
+	psi1[pidx] = rcmbE[pk]*psi1[pidx] + rcmaE[pk]*( hy[tk+1] - hy[tk] );
+	//psi1[pidx] = rcmbE[pk]*psi1[pidx] + rcmaE[pk]*( Hy[idx+1] - Hy[idx] );
+	Ex[eidx] -= CEx[idx]*psi1[pidx];
+
+	psi2[pidx] = rcmbE[pk]*psi2[pidx] + rcmaE[pk]*( hx[tk+1] - hx[tk] );
+	//psi2[pidx] = rcmbE[pk]*psi2[pidx] + rcmaE[pk]*( Hx[idx+1] - Hx[idx] );
+	Ey[eidx] += CEy[idx]*psi2[pidx];
+}
+
+
+__global__ void update_z_h( int Ny, int Nz, float *Ex, float *Ey,float *Ez, float *Hx, float *Hy,float *Hz, float *psi1, float *psi2, int backward ) {
+	int tk = threadIdx.x;
+	int pidx = blockIdx.x*blockDim.x + tk;
+	int pk = pidx%NPMLp + backward*NPMLp;
+
+	int idx = pidx + (pidx/NPMLp + backward)*(Nz-NPMLp);
+	int eidx = idx + Ny*Nz;
+
+	extern __shared__ float es[];
+	float* ex = (float*) es;
+	float* ey = (float*) &ex[blockDim.x+1];
+
+	ex[tk+1] = Ex[eidx];
+	ey[tk+1] = Ey[eidx];
+	__syncthreads();
+
+	psi1[pidx] = rcmbH[pk]*psi1[pidx] + rcmaH[pk]*( ey[tk+1] - ey[tk] );
+	//psi1[pidx] = rcmbH[pk]*psi1[pidx] + rcmaH[pk]*( Ey[eidx] - Ey[eidx-1] );
+	Hx[idx] += 0.5*psi1[pidx];
+
+	psi2[pidx] = rcmbH[pk]*psi2[pidx] + rcmaH[pk]*( ex[tk+1] - ex[tk] );
+	//psi2[pidx] = rcmbH[pk]*psi2[pidx] + rcmaH[pk]*( Ex[eidx] - Ex[eidx-1] );
+	Hy[idx] -= 0.5*psi2[pidx];
+}
+*/
