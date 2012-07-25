@@ -1,0 +1,52 @@
+  1 import numpy as np
+  2 import pyopencl as cl
+  3 from mpi4py import MPI
+  4
+  5 import sys, os
+  6 sys.path.append( os.path.expanduser('~') )
+  7 from kemp.fdtd3d.util import common_gpu
+  8 from kemp.fdtd3d.gpu import Fields, Core, Pbc, IncidentDirect, GetFields
+  9 from kemp.fdtd3d import node, cpu
+ 10
+ 11
+ 12 comm = MPI.COMM_WORLD
+ 13 rank = comm.Get_rank()
+ 14 size = comm.Get_size()
+ 15
+ 16
+ 17 is_plot = False
+ 18
+ 19 #nx, ny, nz = 240, 256, 256  # 540 MB
+ 20 #nx, ny, nz = 544, 544, 544  # 5527 MB
+ 21 #nx, ny, nz = 512, 512, 512  # 4608 MB
+ 22 #nx, ny, nz = 480, 480, 480  # 3796 MB
+ 23 nx, ny, nz = 400, 256, 256  # 576 MB
+ 24 #nx, ny, nz = 128, 128, 128  # 72 MB
+ 25
+ 26 coeff_use = 'e'
+ 27 precision_float = 'single'
+ 28
+ 29 # instances
+ 30 gpu_devices = common_gpu.gpu_device_list(print_info=False)
+ 31 context = cl.Context(gpu_devices)
+ 32 device = gpu_devices[0]
+ 33 qtask = cpu.QueueTask()
+ 34 fields = Fields(context, device, qtask, nx, ny, nz, coeff_use, precision_float)
+ 35 Core(fields)
+ 36
+ 37 tmax = 250 if is_plot else 1000
+ 38 if rank == 0: direction = '+'
+ 39 elif rank == size - 1: direction = '-'
+ 40 else: direction = '+-'
+ 41
+ 42 #exch = node.ExchangeMpiNonBlock(fields, direction)
+ 43
+ 44 #exch = node.ExchangeMpiBufferBlock(fields, direction)
+ 45 #exch = node.ExchangeMpiBufferBlockSplit(fields, direction)
+ 46 exch = node.ExchangeMpiBufferNonBlockSplitEnqueue(fields, direction, tmax)
+ 47 if '+' in direction: cpu.Core(exch.cpuf_p)
+ 48 if '-' in direction: cpu.Core(exch.cpuf_m)
+ 49
+ 50 is_master = True if rank == 0 else False
+ 51
+"node/test/measure_mpi.py" 123L, 3500C written                                                                                                                        23,15         Top

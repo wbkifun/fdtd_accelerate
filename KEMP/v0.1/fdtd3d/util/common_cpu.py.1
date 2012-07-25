@@ -1,0 +1,58 @@
+import numpy as np
+import os
+import tempfile
+import atexit
+import subprocess as sp
+
+import common
+
+src_path = os.path.sep.join( (os.path.dirname(__file__), 'cpu', 'src', '') )
+
+
+def print_cpu_info():
+	for line in open('/proc/cpuinfo'):
+		if 'model name' in line:
+			cpu_name0 = line[line.find(':')+1:-1]
+			break
+	cpu_name = ''
+	for s in cpu_name0.split():
+		cpu_name += (s + ' ')
+
+	for line in open('/proc/meminfo'):
+		if 'MemTotal' in line:
+			mem_nbytes = int(line[line.find(':')+1:line.rfind('kB')]) * 1024
+			break
+	print('Host Device :')
+	print('  name: %s' % cpu_name)
+	print('  mem size: %1.2f %s' % common.get_nbytes_unit(mem_nbytes))
+	print('')
+
+
+def remove_tmpfiles(path):
+	os.remove(path)
+	os.remove(path.replace('.c', '.so'))
+
+
+def build(src):
+	path = tempfile.gettempdir() + '/kemp'
+	if not os.path.exists(path): 
+		os.mkdir(path)
+	f = tempfile.NamedTemporaryFile(suffix='.c', dir=path, delete=False)
+	f.write(src)
+	f.close()
+	cmd = 'gcc -O3 -std=c99 -fpic -shared -fopenmp -msse %s -o %s' % (f.name, f.name.replace('.c','.so'))
+	proc = sp.Popen(cmd.split(), stdout=sp.PIPE, stderr=sp.PIPE)
+	stdoutdata, stderrdata = proc.communicate()
+	if stdoutdata != '' or stderrdata != '':
+		print('stdout :\n%s\nstderr :\n %s\n' % (stdoutdata, stderrdata))
+
+	libname = f.name.rstrip('.c').split('/')[-1]
+	program = np.ctypeslib.load_library(libname, path)
+	atexit.register(remove_tmpfiles, f.name)
+
+	return program
+
+
+
+if __name__ == '__main__':
+	print_cpu_info()

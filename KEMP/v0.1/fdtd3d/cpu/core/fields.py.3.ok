@@ -1,0 +1,324 @@
+import atexit
+import numpy as np
+import unittest
+from ctypes import c_int
+from threading import Thread, Event
+from Queue import Queue
+
+from kemp.fdtd3d.util import common, common_cpu
+
+
+class QueueTask(Thread):
+    def __init__(self):
+        Thread.__init__(self)
+        self.daemon = True
+        self.queue = Queue()
+        atexit.register( self.queue.join )
+
+        self.start()
+
+
+    def run(self):
+        while True:
+            func, args, wait_for, event = self.queue.get()
+
+            for evt in wait_for: 
+                evt.wait()
+            func(*args)
+            event.set()
+
+            self.queue.task_done()
+
+
+    def enqueue(self, func, args=[], wait_for=[]):
+        event = Event()
+        event.clear()
+        self.queue.put( (func, args, wait_for, event) )
+
+        return event 
+
+
+    def enqueue_barrier(self):
+        evt = self.enqueue(lambda:None)
+        evt.wait()
+
+
+
+class Fields:
+    def __init__(self, nx, ny, nz, \
+            coeff_use='e', \
+            arr_type='float32', \
+            use_cpu_core=0):
+        """
+        """
+
+        common.check_type('nx', nx, int)
+        common.check_type('ny', ny, int)
+        common.check_type('nz', nz, int)
+        common.check_value('coeff_use', coeff_use, ('', 'e', 'h', 'eh'))
+        common.check_value('arr_type', arr_type, ('float32', 'float64'))
+
+        self.nx = nx
+        self.ny = ny
+        self.nz = nz
+        self.coeff_use=coeff_use
+        self.dtype = {'float32':np.float32, 'float64':np.float64}[arr_type]
+        self.dtype_str_list = { \
+                'float32':['float', 'xmmintrin.h', 'ps', '__m128', '4', '1,1,'], \
+                'float64':['double', 'emmintrin.h', 'pd', '__m128d', '2', ''] }[arr_type]
+
+        self.device_type = 'cpu'
+
+        # check the nz is multiple of 4 (float32) or 2 (float64)
+        nbytes = np.nbytes[self.dtype]
+        if nz % nbytes != 0:
+            raise ValueError("nz must be multiple of %d" % nbytes)
+
+        # ns, qtask, enqueue
+        self.ns = [np.int32(nx), np.int32(ny), np.int32(nz)]
+        self.qtask = QueueTask()
+        self.enqueue = self.qtask.enqueue
+        self.enqueue_barrier = self.qtask.enqueue_barrier
+
+        # on/off the coefficient arrays
+        if 'e' in self.coeff_use:
+            ce_on = True
+        else:
+            ce_on = False
+
+        if 'h' in self.coeff_use:
+            ch_on = True
+        else:
+            ch_on = False
+
+        # allocations
+        self.ehs = [np.zeros(self.ns, dtype=self.dtype) for i in range(6)]
+        self.ex, self.ey, self.ez, self.hx, self.hy, self.hz = self.ehs
+
+        if ce_on:
+            self.ces = [np.ones(self.ns, dtype=self.dtype)*0.5 for i in range(3)]
+            self.cex, self.cey, self.cez = self.ces 
+
+        if ch_on:
+            self.chs = [np.ones(self.ns, dtype=self.dtype)*0.5 for i in range(3)]
+            self.chx, self.chy, self.chz = self.chs
+
+        # program
+        macros = [ \
+                'ARGS_CE', 'INIT_CE', 'PRIVATE_CE', 'CEX', 'CEY', 'CEZ', \
+                'ARGS_CH', 'INIT_CH', 'PRIVATE_CH', 'CHX', 'CHY', 'CHZ', \
+                'OMP_SET_NUM_THREADS', \
+                'DTYPE', 'MM_HEADER', 'PSD', 'TYPE128', 'INCRE', 'CMASK']
+
+        values = [ \
+                '', 'ce=SET1(0.5)', '', '', '', '', \
+                '', 'ch=SET1(0.5)', '', '', '', '', \
+                ''] + self.dtype_str_list
+
+        if use_cpu_core != 0:
+            values[12] = 'omp_set_num_threads(%d);' % use_cpu_core
+
+        if ce_on:
+            values[:6] = [ \
+                    ', DTYPE *cex, DTYPE *cey, DTYPE *cez', 'ce', ', ce', \
+                    'ce = LOAD(cex+idx);', 'ce = LOAD(cey+idx);', 'ce = LOAD(cez+idx);']
+        if ch_on:
+            values[6:12] = [ \
+                    ', DTYPE *chx, DTYPE *chy, DTYPE *chz', 'ch', ', ch', \
+                    'ch = LOAD(chx+idx);', 'ch = LOAD(chy+idx);', 'ch = LOAD(chz+idx);']
+
+        ksrc = common.replace_template_code(open('core.c').read(), macros, values)
+        self.program = common_cpu.build_clib(ksrc)
+
+        carg = np.ctypeslib.ndpointer(dtype=self.dtype, ndim=3, \
+                shape=(nx, ny, nz), flags='C_CONTIGUOUS, ALIGNED')
+        argtypes = [c_int, c_int, c_int, c_int, c_int] + \
+                [carg for i in xrange(6)]
+        self.program.update_e.argtypes = argtypes
+        self.program.update_e.restype = None
+        self.program.update_h.argtypes = argtypes
+        self.program.update_h.restype = None
+        self.e_args = self.ns + [0, nx*ny*nz] + self.ehs
+        self.h_args = self.ns + [0, nx*ny*nz] + self.ehs
+
+        if ce_on:
+            self.program.update_e.argtypes += [carg for i in xrange(3)]
+            self.e_args += self.ces
+
+        if ch_on:
+            self.program.update_h.argtypes += [carg for i in xrange(3)]
+            self.h_args += self.chs
+
+
+    def get(self, str_f):
+        return self.__dict__[str_f]
+
+
+    def set_ce(self, cex, cey, cez):
+        self.cex[:] = cex[:]
+        self.cey[:] = cey[:]
+        self.cez[:] = cez[:]
+
+
+    def set_ch(self, chx, chy, chz):
+        self.chx[:] = chx[:]
+        self.chy[:] = chy[:]
+        self.chz[:] = chz[:]
+
+
+    def update_e(self):
+        self.qtask.enqueue(self.program.update_e, self.e_args)
+
+
+    def update_h(self):
+        self.qtask.enqueue(self.program.update_h, self.h_args)
+
+
+
+
+class TestQueueTask(unittest.TestCase):
+    def __init__(self, args):
+        super(TestQueueTask, self).__init__()
+        self.args = args
+
+
+    def doubling(self, x, y):
+        y[:] = 2 * x[:]
+
+
+    def combine(self, x, y, z):
+        z[:] = np.concatenate((x, y))
+
+
+    def verify(self, x, y):
+        self.assertEqual(np.linalg.norm(x - y), 0)
+
+
+    def runTest(self):
+        nx, tmax = self.args
+
+        source = np.random.rand(nx)
+        result = np.zeros_like(source)
+        self.doubling(source, result)
+
+        arr0 = np.zeros(nx/2)
+        arr1 = np.zeros_like(arr0)
+        arr2 = np.zeros(nx)
+
+        qtask0 = QueueTask()
+        qtask1 = QueueTask()
+
+        for i in xrange(tmax):
+            evt0 = qtask0.enqueue(self.doubling, [source[:nx/2], arr0])
+            evt1 = qtask1.enqueue(self.doubling, [source[nx/2:], arr1])
+            evt2 = qtask0.enqueue(self.combine, [arr0, arr1, arr2], wait_for=[evt1])
+            evt3 = qtask1.enqueue(self.verify, [result, arr2], wait_for=[evt2])
+        evt3.wait()
+
+
+
+class TestFields(unittest.TestCase):
+    def __init__(self, args):
+        super(TestFields, self).__init__()
+        self.args = args
+
+
+    def update_e(self, ehs, ces):
+        ex, ey, ez, hx, hy, hz = ehs
+        cex, cey, cez = ces
+
+        ex[:, :-1, :-1] += cex[:, :-1, :-1] * \
+                ((hz[:, 1:, :-1] - hz[:, :-1, :-1]) - (hy[:, :-1, 1:] - hy[:, :-1, :-1]))
+        ey[:-1, :, :-1] += cey[:-1, :, :-1] * \
+                ((hx[:-1, :, 1:] - hx[:-1, :, :-1]) - (hz[1:, :, :-1] - hz[:-1, :, :-1]))
+        ez[:-1, :-1, :] += cez[:-1, :-1, :] * \
+                ((hy[1:, :-1, :] - hy[:-1, :-1, :]) - (hx[:-1, 1:, :] - hx[:-1, :-1, :]))
+
+
+    def update_h(self, ehs, chs):
+        ex, ey, ez, hx, hy, hz = ehs
+        chx, chy, chz = chs
+
+        hx[:, 1:, 1:] -= chx[:, 1:, 1:] * \
+                ((ez[:, 1:, 1:] - ez[:, :-1, 1:]) - (ey[:, 1:, 1:] - ey[:, 1:, :-1]))
+        hy[1:, :, 1:] -= chy[1:, :, 1:] * \
+                ((ex[1:, :, 1:] - ex[1:, :, :-1]) - (ez[1:, :, 1:] - ez[:-1, :, 1:]))
+        hz[1:, 1:, :] -= chz[1:, 1:, :] * \
+                ((ey[1:, 1:, :] - ey[:-1, 1:, :]) - (ex[1:, 1:, :] - ex[1:, :-1, :]))
+
+
+    def runTest(self):
+        ufunc, nx, ny, nz, coeff_use, arr_type, use_cpu_core, tmax = self.args
+        fields = Fields(nx, ny, nz, coeff_use, arr_type, use_cpu_core)
+
+        # allocations
+        ns = fields.ns
+        dtype = fields.dtype
+
+        if ufunc == 'e':
+            ehs = [np.zeros(ns, dtype=dtype) for i in range(3)] + \
+                    [np.random.rand(*ns).astype(dtype) for i in range(3)]
+
+        elif ufunc == 'h':
+            ehs = [np.random.rand(*ns).astype(dtype) for i in range(3)] + \
+                    [np.zeros(ns, dtype=dtype) for i in range(3)]
+
+        for eh, eh_ext in zip(fields.ehs, ehs):
+            eh[:] = eh_ext[:]
+
+        # allocations for coefficient
+        if 'e' in coeff_use:
+            ces = [np.random.rand(*ns).astype(dtype) for i in range(3)]
+            fields.set_ce(*ces)
+        else:
+            ces = [np.ones(ns, dtype=dtype)*0.5 for i in range(3)]
+
+        if 'h' in coeff_use:
+            chs = [np.random.rand(*ns).astype(dtype) for i in range(3)]
+            fields.set_ch(*chs)
+        else:
+            chs = [np.ones(ns, dtype=dtype)*0.5 for i in range(3)]
+
+        # update
+        if ufunc == 'e':
+            for tstep in xrange(0, tmax):
+                fields.update_e()
+                self.update_e(ehs, ces)
+            fields.enqueue_barrier()
+
+            for strf, eh in zip(['ex', 'ey', 'ez'], ehs[:3]):
+                norm = np.linalg.norm(eh - fields.get(strf))
+                self.assertEqual(norm, 0, '%s %g %s' % (self.args, norm, strf) )
+
+        elif ufunc == 'h':
+            for tstep in xrange(0, tmax):
+                fields.update_h()
+                self.update_h(ehs, chs)
+            fields.enqueue_barrier()
+
+            for strf, eh in zip(['hx', 'hy', 'hz'], ehs[3:]):
+                norm = np.linalg.norm(eh - fields.get(strf))
+                self.assertEqual(norm, 0, '%s %g %s' % (self.args, norm, strf) )
+
+
+
+if __name__ == '__main__':
+    suite = unittest.TestSuite() 
+    suite.addTest(TestQueueTask( [1000, 10000] ))
+
+    nx, ny, nz = 40, 50, 64
+    suite.addTest(TestFields( ('e', nx, ny, nz, '', 'float32', 0, 1) ))
+
+    args_list = [ \
+            (ufunc, nx, ny, nz, coeff_use, arr_type, use_cpu_core, 1) \
+            for ufunc in ['e', 'h'] \
+            for coeff_use in ['', 'e', 'h'] \
+            for arr_type in ['float32', 'float64'] \
+            for use_cpu_core in [0, 1] ]
+    suite.addTests(TestFields(args) for args in args_list) 
+
+    fields = Fields(nx, ny, nz, coeff_use, arr_type, use_cpu_core)
+    suite.addTest(TestFields( ('e', nx, ny, nz, 'e', 'float32', 0, 1000) ))
+    suite.addTest(TestFields( ('e', nx, ny, nz, 'e', 'float64', 0, 1000) ))
+
+    unittest.TextTestRunner().run(suite) 

@@ -1,0 +1,89 @@
+tstep = 1
+---------------------------------------------------------------------
+0  upE, exch, save E
+rank=0, <_FuncPtr object at 0x20fcc80>
+rank=0, <built-in method Start of mpi4py.MPI.Prequest object at 0_RECV0>
+rank=0, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x22e5ef0>>
+rank=0, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x249fcf8>>
+
+
+
+0  upH pre
+rank=0, <_FuncPtr object at 0x20fcd50>
+rank=0, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x249f5a8>>
+rank=0, <built-in method Start of mpi4py.MPI.Prequest object at 0_SEND>
+rank=0, <built-in method Wait of mpi4py.MPI.Prequest object at 0_RECV0>
+rank=0, <bound method SetFields.set_fields_spatial_value of <kemp.fdtd3d.cpu.get_set_fields.SetFields instance at 0x249f758>>
+rank=0, <built-in method Start of mpi4py.MPI.Prequest object at 0_RECV1>
+
+0  upH post
+rank=0, <_FuncPtr object at 0x20fcd50>
+
+
+
+0  exch, save H
+rank=0, <bound method SetFields.set_fields_spatial_value of <kemp.fdtd3d.cpu.get_set_fields.SetFields instance at 0x249f2d8>>
+rank=0, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x249f830>>
+
+
+tstep = 2
+---------------------------------------------------------------------
+0  upE, exch, save
+rank=0, <_FuncPtr object at 0x20fcc80>
+rank=0, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x22e5ef0>>
+rank=0, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x249fcf8>>
+
+
+
+0  upH pre
+rank=0, <_FuncPtr object at 0x20fcd50>
+rank=0, <built-in method Wait of mpi4py.MPI.Prequest object at 0_SEND>
+rank=0, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x249f5a8>>
+rank=0, <built-in method Start of mpi4py.MPI.Prequest object at 0_SEND>
+rank=0, <built-in method Wait of mpi4py.MPI.Prequest object at 0_RECV1>
+rank=0, <bound method SetFields.set_fields_spatial_value of <kemp.fdtd3d.cpu.get_set_fields.SetFields instance at 0x249f758>>
+rank=0, <built-in method Start of mpi4py.MPI.Prequest object at 0_RECV0>
+
+0 upH post
+rank=0, <_FuncPtr object at 0x20fcd50>
+
+
+
+0  exch, save H
+rank=0, <bound method SetFields.set_fields_spatial_value of <kemp.fdtd3d.cpu.get_set_fields.SetFields instance at 0x249f2d8>>
+rank=0, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x249f830>>
+
+
+tstep = 3
+---------------------------------------------------------------------
+0  upE, exch, save
+rank=0, <_FuncPtr object at 0x20fcc80>
+rank=0, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x22e5ef0>>
+rank=0, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x249fcf8>>
+
+
+
+0  upH pre
+rank=0, <_FuncPtr object at 0x20fcd50>
+rank=0, <built-in method Wait of mpi4py.MPI.Prequest object at 0_SEND>
+rank=0, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x249f5a8>>
+rank=0, <built-in method Start of mpi4py.MPI.Prequest object at 0_SEND>
+rank=0, <built-in method Wait of mpi4py.MPI.Prequest object at 0_RECV0>
+rank=0, <bound method SetFields.set_fields_spatial_value of <kemp.fdtd3d.cpu.get_set_fields.SetFields instance at 0x249f758>>
+rank=0, <built-in method Start of mpi4py.MPI.Prequest object at 0_RECV1>
+
+0 upH post, exch, save
+rank=0, <_FuncPtr object at 0x20fcd50>
+rank=0, <bound method SetFields.set_fields_spatial_value of <kemp.fdtd3d.cpu.get_set_fields.SetFields instance at 0x249f2d8>>
+rank=0, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x249f830>>
+
+
+tstep = 4
+---------------------------------------------------------------------
+0 upE,  exch, save
+rank=0, <_FuncPtr object at 0x20fcc80>
+rank=0, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x22e5ef0>>
+rank=0, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x249fcf8>>
+
+
+2 total processes killed (some possibly by mpirun during cleanup)

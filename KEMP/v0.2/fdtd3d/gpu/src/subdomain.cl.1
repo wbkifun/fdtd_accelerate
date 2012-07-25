@@ -1,0 +1,12 @@
+__kernel void subdomain(int nx, int ny, int nz, int shift_idx, __global DTYPE *sub_buffer, ARGS) { 
+    int gid = get_global_id(0);
+    int idx1, idx2;
+
+    while( gid < NMAX ) {
+        idx = gid + NMAX*shift_idx
+        sub_idx = XID*ny*nz + YID*nz + ZID;
+
+        sub_buffer[sub_idx] = SOURCE;
+        gid += get_global_size(0);
+    }
+} 

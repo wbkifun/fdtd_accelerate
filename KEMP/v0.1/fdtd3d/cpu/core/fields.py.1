@@ -1,0 +1,88 @@
+import numpy as np
+from ctypes import c_int
+from kemp.fdtd3d import common, common_cpu
+
+
+class Fields:
+	def __init__(s, nx, ny, nz, dtype=np.float32, coeff_use='e', use_cpu_core=0):
+		s.nx = nx
+		s.ny = ny
+		s.nz = nz
+		s.dtype = dtype
+
+		s.ns = [np.int32(s.nx), np.int32(s.ny), np.int32(s.nz)]
+
+
+		# onoff the coefficient arrays
+		if bool(set(coeff_use).intersection(['e','E'])):
+			s.ce_on = True
+		else:
+			s.ce_on = False
+
+		if bool(set(coeff_use).intersection(['h','H'])):
+			s.ch_on = True
+		else:
+			s.ch_on = False
+
+
+		# allocations
+		s.ehs = [np.zeros((s.nx, s.ny, s.nz), dtype=s.dtype) for i in range(6)]
+		s.ex, s.ey, s.ez, s.hx, s.hy, s.hz = s.ehs
+
+		if s.ce_on:
+			s.ces = [np.ones((s.nx, s.ny, s.nz), dtype=s.dtype) * 0.5 for i in range(3)]
+			s.cex, s.cey, s.cez = s.ces 
+		if s.ch_on:
+			s.chs = [np.ones((s.nx, s.ny, s.nz), dtype=s.dtype) * 0.5 for i in range(3)]
+			s.chx, s.chy, s.chz = s.chs
+
+
+		# program
+		macros = ['OMP_SET_NUM_THREADS', \
+				'ARGS_CE', 'INIT_CE', 'OMP_SHARED_CE', 'OMP_PRIVATE_CE', 'CEX', 'CEY', 'CEZ', \
+				'ARGS_CH', 'INIT_CH', 'OMP_SHARED_CH', 'OMP_PRIVATE_CH', 'CHX', 'CHY', 'CHZ']
+		vals = ['', \
+				'', 'ce={0.5,0.5,0.5,0.5}', 'ce', '', '', '', '', \
+				'', 'ch={0.5,0.5,0.5,0.5}', 'ch', '', '', '', '']
+
+		if use_cpu_core != 0:
+			vals[0] = 'omp_set_num_threads(%d);' % use_cpu_core
+
+		if s.ce_on:
+			vals[1:8] = [', float *cex, float *cey, float *cez', 'ce', 'cex, cey, cez', ', ce', 'ce = LOAD(cex+idx);', 'ce = LOAD(cey+idx);', 'ce = LOAD(cez+idx);']
+
+		if s.ch_on:
+			vals[8:] =  [', float *chx, float *chy, float *chz', 'ch', 'chx, chy, chz', ', ch', 'ch = LOAD(chx+idx);', 'ch = LOAD(chy+idx);', 'ch = LOAD(chz+idx);']
+
+
+		ksrc = common.replace_template_code(open(common_cpu.src_path + 'core.c').read(), macros, vals)
+		s.program = common_cpu.build(ksrc)
+
+		carg = np.ctypeslib.ndpointer(dtype=s.dtype, ndim=3, shape=(s.nx, s.ny, s.nz), flags='C_CONTIGUOUS, ALIGNED')
+		argtypes = [c_int, c_int, c_int] + [carg for i in xrange(6)]
+		s.program.update_e.argtypes = argtypes
+		s.program.update_e.restype = None
+		s.program.update_h.argtypes = argtypes
+		s.program.update_h.restype = None
+		s.e_args = s.ns + s.ehs
+		s.h_args = s.ns + s.ehs
+
+		if s.ce_on:
+			s.program.update_e.argtypes += [carg for i in xrange(3)]
+			s.e_args += s.ces
+
+		if s.ch_on:
+			s.program.update_h.argtypes += [carg for i in xrange(3)]
+			s.h_args += s.chs
+
+
+	def __getitem__(s, str_f):
+		return s.__dict__[str_f]
+
+
+	def update_e(s):
+		s.program.update_e(*s.e_args)
+
+
+	def update_h(s):
+		s.program.update_h(*s.h_args)

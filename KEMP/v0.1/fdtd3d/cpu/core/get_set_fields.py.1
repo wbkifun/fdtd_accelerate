@@ -1,0 +1,48 @@
+import numpy as np
+from kemp.fdtd3d import common
+
+
+class GetFields:
+	def __init__(s, fields, str_fs, pt0, pt1):
+		s.emf = fields
+		if type(str_fs) == str:
+			s.str_fs = [str_fs,]
+		else:
+			s.str_fs = str_fs
+
+		s.str_fs_size = len(s.str_fs)
+		s.slidx = common.get_slice_index(pt0, pt1)
+
+
+	def get_fields(s, str_f=None):
+		if str_f == None:
+			if s.str_fs_size == 1:
+				return s.emf[s.str_fs[0]][s.slidx]
+			else:
+				return np.concatenate( [s.emf[str_f][s.slidx] for str_f in s.str_fs] )
+
+		else:
+			return s.emf[str_f][s.slidx]
+
+
+
+class SetFields:
+	def __init__(s, fields, str_fs, pt0, pt1):
+		s.emf = fields
+		if type(str_fs) == str:
+			s.str_fs = [str_fs,]
+		else:
+			s.str_fs = str_fs
+
+		s.str_fs_size = len(s.str_fs)
+		s.slidx = common.get_slice_index(pt0, pt1)
+
+
+	def set_fields(s, values):
+		if type(values) == np.ndarray:
+			for str_f, ndarr in zip(s.str_fs, np.array_split(values, s.str_fs_size)):
+				s.emf.__dict__[str_f][s.slidx] = ndarr
+
+		else:
+			for str_f in s.str_fs:
+				s.emf.__dict__[str_f][s.slidx] = values

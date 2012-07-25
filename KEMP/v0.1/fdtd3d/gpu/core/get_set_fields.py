@@ -1,0 +1,367 @@
+import numpy as np
+import pyopencl as cl
+import unittest
+
+from kemp.fdtd3d.util import common, common_gpu
+from kemp.fdtd3d.test.common_test import random_set_two_points
+from fields import Fields
+
+
+def macro_replace_list(pt0, pt1):
+    """
+    Return the replace string list correspond to macro
+
+    This is used to generate the opencl kernel from the template.
+    """
+
+    common.check_type('pt0', pt0, (list, tuple), int)
+    common.check_type('pt1', pt1, (list, tuple), int)
+
+    x0, y0, z0 = pt0
+    x1, y1, z1 = pt1
+
+    snx = abs(x1 - x0) + 1
+    sny = abs(y1 - y0) + 1
+    snz = abs(z1 - z0) + 1
+
+    nmax = snx * sny * snz
+    xid, yid, zid = x0, y0, z0
+
+    if x0 == x1 and y0 == y1 and z0 == z1:
+        pass
+
+    elif x0 != x1 and y0 == y1 and z0 == z1:
+        xid = '(gid + %d)' % x0
+	
+    elif x0 == x1 and y0 != y1 and z0 == z1:
+        yid = '(gid + %d)' % y0
+	
+    elif x0 == x1 and y0 == y1 and z0 != z1:
+        zid = '(gid + %d)' % z0
+	
+    elif x0 != x1 and y0 != y1 and z0 == z1:
+        xid = '(gid/%d + %d)' % (sny, x0)
+        yid = '(gid%%%d + %d)' % (sny, y0)
+	
+    elif x0 == x1 and y0 != y1 and z0 != z1:
+        yid = '(gid/%d + %d)' % (snz, y0)
+        zid = '(gid%%%d + %d)' % (snz, z0)
+	
+    elif x0 != x1 and y0 == y1 and z0 != z1:
+        xid = '(gid/%d + %d)' % (snz, x0)
+        zid = '(gid%%%d + %d)' % (snz, z0)
+	
+    elif x0 != x1 and y0 != y1 and z0 != z1:
+        xid = '(gid/%d + %d)' % (sny*snz, x0)
+        yid = '((gid/%d)%%%d + %d)' % (snz, sny, y0)
+        zid = '(gid%%%d + %d)' % (snz, z0)
+	
+    return [str(nmax), str(xid), str(yid), str(zid)]
+
+
+
+class GetFields:
+    def __init__(self, fields, str_f, pt0, pt1):
+        """
+        """
+
+        common.check_type('fields', fields, Fields)
+        common.check_type('str_f', str_f, (str, list, tuple), str)
+        common.check_type('pt0', pt0, (list, tuple), int)
+        common.check_type('pt1', pt1, (list, tuple), int)
+
+        self.mainf = mainf = fields
+        str_fs = common.convert_to_tuple(str_f)
+
+        # program
+        macros = ['NMAX', 'XID', 'YID', 'ZID', \
+                'ARGS', \
+                'TARGET', 'SOURCE', \
+                'DTYPE', 'PRAGMA_fp64']
+
+        values = macro_replace_list(pt0, pt1) + \
+                ['__global DTYPE *source', \
+                'target[sub_idx]', 'source[idx]'] + mainf.dtype_str_list[:2]
+
+        ksrc = common.replace_template_code( \
+                open(common_gpu.src_path + 'subdomain.cl').read(), macros, values)
+        self.program = cl.Program(mainf.context, ksrc).build()
+
+        # allocation
+        self.source_bufs = [mainf.get_buf(str_f) for str_f in str_fs]
+        shape = list( common.shape_two_points(pt0, pt1) )
+        shape[0] *= len(str_fs)
+        self.host_array = np.zeros(shape, dtype=mainf.dtype)
+
+        self.split_host_array = np.split(self.host_array, len(str_fs))
+        self.split_host_array_dict = dict( zip(str_fs, self.split_host_array) ) 
+        self.target_buf = cl.Buffer( \
+                mainf.context, \
+                cl.mem_flags.READ_WRITE | cl.mem_flags.COPY_HOST_PTR, \
+                hostbuf=self.host_array)
+
+
+    def get_event(self):
+        """
+        """
+
+        mainf = self.mainf
+        queue, gs, ls = mainf.queue, mainf.gs, mainf.ls
+        nx, ny, nz_pitch = mainf.ns_pitch
+
+        for shift_idx, source_buf in enumerate(self.source_bufs):
+            self.program.subdomain(queue, (gs,), (ls,), \
+                    nx, ny, nz_pitch, np.int32(shift_idx), \
+                    self.target_buf, source_buf)
+
+        evt = cl.enqueue_copy(queue, \
+                self.host_array, self.target_buf, is_blocking=False)
+
+        return evt
+
+
+    def get_fields(self, str_f=''):
+        """
+        """
+
+        if str_f == '':
+            return self.host_array
+        else:
+            return self.split_host_array_dict[str_f]
+
+
+
+class SetFields:
+    def __init__(self, fields, str_f, pt0, pt1, source_is_array=False):
+        """
+        """
+
+        common.check_type('fields', fields, Fields)
+        common.check_type('str_f', str_f, (str, list, tuple), str)
+        common.check_type('pt0', pt0, (list, tuple), int)
+        common.check_type('pt1', pt1, (list, tuple), int)
+        common.check_type('source_is_array', source_is_array, bool)
+
+        self.mainf = mainf = fields
+        str_fs = common.convert_to_tuple(str_f)
+
+		# program
+        macros = ['NMAX', 'XID', 'YID', 'ZID', \
+                'ARGS', \
+                'TARGET', 'SOURCE', \
+                'DTYPE', 'PRAGMA_fp64']
+
+        if source_is_array:
+            values = macro_replace_list(pt0, pt1) + \
+                    ['__global DTYPE *source', \
+                    'target[idx]', 'source[sub_idx]'] + mainf.dtype_str_list[:2]
+        else:
+            values = macro_replace_list(pt0, pt1) + \
+                    ['DTYPE source', \
+                    'target[idx]', 'source'] + mainf.dtype_str_list[:2]
+
+        ksrc = common.replace_template_code( \
+                open(common_gpu.src_path + 'subdomain.cl').read(), macros, values)
+        self.program = cl.Program(mainf.context, ksrc).build()
+
+		# allocation
+        self.target_bufs = [mainf.get_buf(str_f) for str_f in str_fs]
+        shape = list( common.shape_two_points(pt0, pt1) )
+        shape[0] *= len(str_fs)
+
+        if source_is_array:
+            tmp_array = np.zeros(shape, dtype=mainf.dtype)
+            self.source_buf = cl.Buffer( \
+                    mainf.context, \
+                    cl.mem_flags.READ_WRITE | cl.mem_flags.COPY_HOST_PTR, \
+                    hostbuf=tmp_array)
+            self.set_fields = self.set_fields_spatial_value
+        else:
+            self.set_fields = self.set_fields_single_value
+
+
+    def set_fields_spatial_value(self, value, wait_for=[]):
+        """
+        """
+
+        mainf = self.mainf
+        queue, gs, ls = mainf.queue, mainf.gs, mainf.ls
+        nx, ny, nz_pitch = mainf.ns_pitch
+        common.check_value('value.dtype', value.dtype, mainf.dtype)
+
+        cl.enqueue_copy(queue, self.source_buf, value, \
+                is_blocking=False, wait_for=wait_for)
+
+        for shift_idx, target_buf in enumerate(self.target_bufs):
+            self.program.subdomain(queue, (gs,), (ls,), \
+                    nx, ny, nz_pitch, np.int32(shift_idx), \
+                    target_buf, self.source_buf)
+
+
+    def set_fields_single_value(self, value, wait_for=[]):
+        """
+        """
+
+        mainf = self.mainf
+        queue, gs, ls = mainf.queue, mainf.gs, mainf.ls
+        nx, ny, nz_pitch = mainf.ns_pitch
+
+        for i, target_buf in enumerate(self.target_bufs):
+            if i == 0:
+                self.program.subdomain(queue, (gs,), (ls,), \
+                        nx, ny, nz_pitch, np.int32(0), \
+                        target_buf, mainf.dtype(value), \
+                        wait_for=wait_for)
+            else:
+                self.program.subdomain(queue, (gs,), (ls,), \
+                        nx, ny, nz_pitch, np.int32(0), \
+                        target_buf, mainf.dtype(value))
+
+
+
+
+class TestGetFields(unittest.TestCase):
+    def __init__(self, args):
+        super(TestGetFields, self).__init__() 
+        self.args = args
+
+
+    def runTest(self):
+        nx, ny, nz, str_f, pt0, pt1 = self.args
+
+        slidx = common.slice_index_two_points(pt0, pt1)
+        str_fs = common.convert_to_tuple(str_f)
+
+        # instance
+        gpu_devices = common_gpu.gpu_device_list(print_info=False)
+        context = cl.Context(gpu_devices)
+        device = gpu_devices[0]
+        fields = Fields(context, device, nx, ny, nz, '')
+        getf = GetFields(fields, str_f, pt0, pt1) 
+        
+        # host allocations
+        eh_dict = {}
+        for sf in str_fs:
+            eh_dict[sf] = np.random.rand(*fields.ns).astype(fields.dtype)
+            cl.enqueue_copy(fields.queue, fields.get_buf(sf), eh_dict[sf])
+
+        # verify
+        getf.get_event().wait()
+
+        for str_f in str_fs:
+            original = eh_dict[str_f][slidx]
+            copy = getf.get_fields(str_f)
+            self.assertEqual(np.abs(eh_dict[str_f][slidx] - getf.get_fields(str_f)).max(), 0, self.args)
+
+
+
+class TestSetFields(unittest.TestCase):
+    def __init__(self, args):
+        super(TestSetFields, self).__init__() 
+        self.args = args
+
+
+    def runTest(self):
+        if len(self.args) == 6:
+            nx, ny, nz, str_f, pt0, pt1 = self.args
+            src_is_array = False
+        elif len(self.args) == 7:
+            nx, ny, nz, str_f, pt0, pt1, src_is_array = self.args
+
+        slidx = common.slice_index_two_points(pt0, pt1)
+        str_fs = common.convert_to_tuple(str_f)
+
+        # instance
+        gpu_devices = common_gpu.gpu_device_list(print_info=False)
+        context = cl.Context(gpu_devices)
+        device = gpu_devices[0]
+        fields = Fields(context, device, nx, ny, nz, '')
+        setf = SetFields(fields, str_f, pt0, pt1, src_is_array) 
+        
+        # generate random source
+        if src_is_array:
+            shape = list( common.shape_two_points(pt0, pt1) )
+            shape[0] *= len(str_fs)
+            value = np.random.rand(*shape).astype(fields.dtype)
+            split_value = np.split(value, len(str_fs))
+            split_value_dict = dict( zip(str_fs, split_value) )
+        else:
+            value = np.random.ranf()
+
+        # host allocations
+        eh_dict = {}
+        for sf in str_fs:
+            eh_dict[sf] = np.zeros(fields.ns, dtype=fields.dtype)
+        gpu_eh = np.zeros(fields.ns, dtype=fields.dtype)
+
+        # verify
+        for str_f in str_fs:
+            if src_is_array:
+                eh_dict[str_f][slidx] = split_value_dict[str_f]
+            else:
+                eh_dict[str_f][slidx] = value
+
+        setf.set_fields(value)
+
+        for str_f in str_fs:
+            cl.enqueue_copy(fields.queue, gpu_eh, fields.get_buf(str_f))
+            self.assertEqual(np.abs(eh_dict[str_f] - gpu_eh).max(), 0, self.args)
+
+
+
+if __name__ == '__main__':
+    ns = nx, ny, nz = 40, 50, 64
+
+    suite = unittest.TestSuite() 
+
+    # Test GetFieds
+    # single set
+    #suite.addTest(TestGetFields( (nx, ny, nz, 'ex', (0, 1, 0), (0, 1, 63)) ))
+    #suite.addTest(TestGetFields( (nx, ny, nz, ['ex', 'ey'], (0, 1, 0), (0, 1, 63)) ))
+
+    # boundary exchange
+    args_list1 = [(nx, ny, nz, str_f, pt0, pt1) \
+            for str_f, pt0, pt1 in [
+                    [('ey', 'ez'), (0, 0, 0), (0, ny-1, nz-1)], 
+                    [('ex', 'ez'), (0, 0, 0), (nx-1, 0, nz-1)],
+                    [('ex', 'ey'), (0, 0, 0), (nx-1, ny-1, 0)],
+                    [('hy', 'hz'), (nx-1, 0, 0), (nx-1, ny-1, nz-1)],
+                    [('hx', 'hz'), (0, ny-1, 0), (nx-1, ny-1, nz-1)],
+                    [('hx', 'hy'), (0, 0, nz-1), (nx-1, ny-1, nz-1)] ]]
+    suite.addTests(TestGetFields(args) for args in args_list1)
+
+    # random sets
+    args_list2 = [(nx, ny, nz, str_f, pt0, pt1) \
+            for str_f in ['ex', 'ey', 'ez', 'hx', 'hy', 'hz'] \
+            for shape in ['point', 'line', 'plane', 'volume'] \
+            for pt0, pt1 in random_set_two_points(shape, *ns) ]
+    suite.addTests(TestGetFields(args) for args in args_list2) 
+
+
+    # Test SetFieds
+    # single sets
+    suite.addTest(TestSetFields( (nx, ny, nz, 'ex', (0, 1, 0), (0, 1, 63)) ))
+    suite.addTest(TestSetFields( (nx, ny, nz, ['ex', 'ey'], (0, 1, 0), (0, 1, 63)) ))
+    suite.addTest(TestSetFields( (nx, ny, nz, 'ex', (0, 1, 0), (0, 1, 63), True) ))
+    suite.addTest(TestSetFields( (nx, ny, nz, ['ex', 'ey'], (0, 1, 0), (0, 1, 63), True) ))
+
+    # boundary exchange
+    args_list3 = [(nx, ny, nz, str_f, pt0, pt1, source_is_array) \
+            for str_f, pt0, pt1, source_is_array in [
+                    [('ey', 'ez'), (0, 0, 0), (0, ny-1, nz-1), True], 
+                    [('ex', 'ez'), (0, 0, 0), (nx-1, 0, nz-1), True],
+                    [('ex', 'ey'), (0, 0, 0), (nx-1, ny-1, 0), True],
+                    [('hy', 'hz'), (nx-1, 0, 0), (nx-1, ny-1, nz-1), True],
+                    [('hx', 'hz'), (0, ny-1, 0), (nx-1, ny-1, nz-1), True],
+                    [('hx', 'hy'), (0, 0, nz-1), (nx-1, ny-1, nz-1), True] ]]
+    suite.addTests(TestSetFields(args) for args in args_list3)
+
+    # random sets
+    args_list4 = [(nx, ny, nz, str_f, pt0, pt1, source_is_array) \
+            for str_f in ['ex', 'ey', 'ez', 'hx', 'hy', 'hz'] \
+            for shape in ['point', 'line', 'plane', 'volume'] \
+            for pt0, pt1 in random_set_two_points(shape, *ns) \
+            for source_is_array in [False, True] ]
+    suite.addTests(TestSetFields(args) for args in args_list4) 
+
+    unittest.TextTestRunner().run(suite) 

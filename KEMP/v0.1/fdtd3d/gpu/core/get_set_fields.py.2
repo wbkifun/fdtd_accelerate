@@ -1,0 +1,168 @@
+import numpy as np
+import pyopencl as cl
+from kemp.fdtd3d import common, common_gpu
+
+
+def is_continuous(pt0, pt1, ns):
+	x0, y0, z0 = pt0
+	x1, y1, z1 = pt1
+	nx, ny, nz = ns
+
+	return (x0 == x1 and y0 == y1 and z0 == z1) \
+			or (x0 == x1 and y0 == y1 and z0 != z1) \
+			or (x0 == x1 and y0 != y1 and z0 == 0 and z1 == nz-1) \
+			or (x0 != x1 and y0 == 0 and y1 == ny-1 and z0 == 0 and z1 == nz-1)
+
+
+
+class GetFields:
+	def __init__(s, fields, str_fs, pt0, pt1):
+		s.emf = fields
+		if type(str_fs) == str:
+			s.str_fs = [str_fs,]
+		else:
+			s.str_fs = str_fs
+
+		s.f_size = len(s.str_fs)
+
+		# program
+		s.rplist = common_gpu.get_replace_list(pt0, pt1)
+		macros, vals = s.rplist['macros'], s.rplist['vals']
+		macros += ['ARGS', 'TARGET', 'SOURCE']
+		vals += ['__global float *source', 'target[idx2]', 'source[idx1]']
+		ksrc = common.replace_template_code(open(common_gpu.src_path + 'copy_subdomain.cl').read(), macros, vals)
+		s.program = cl.Program(s.emf.context, ksrc).build()
+
+		# allocation
+		s.fs = [s.emf.get_buffer(sf) for sf in s.str_fs]
+		shape = list( s.rplist['shape'] )
+		shape[0] *= s.f_size
+		s.shifts = [0] + [int(s.rplist['vals'][0]) for sf in s.str_fs[1:]]
+		s.fhost = np.zeros(shape, dtype=s.emf.dtype)
+		mflags = cl.mem_flags.READ_WRITE | cl.mem_flags.COPY_HOST_PTR
+		s.fgpu = cl.Buffer(s.emf.context, mflags, hostbuf=s.fhost)
+
+		x0, y0, z0 = pt0
+		x1, y1, z1 = pt1
+		nx, ny, nz = s.emf.ns
+		continuous = is_continuous(pt0, pt1, s.emf.ns)
+
+		if len(s.fs) == 1:
+			if continuous:
+				s.offset = int( (x0*ny*nz + y0*nz + z0) * np.nbytes[s.emf.dtype] )
+				s.get_event = s.get_event_direct_read
+			else:
+				s.get_event = s.get_event_using_kernel
+
+		else:
+			if continuous:
+				s.nbytes = (abs(x1-x0)+1) * (abs(y1-y0)+1) * (abs(z1-z0)+1) * np.nbytes[s.emf.dtype]
+				s.offset_src = int( (x0*ny*nz + y0*nz + z0) * np.nbytes[s.emf.dtype] )
+				s.offset_dsts = [shift * np.nbytes[s.emf.dtype] for shift in s.shifts]
+				s.get_event = s.get_event_using_copy
+			else:
+				s.get_event = s.get_event_using_kernel
+
+
+	def get_event_using_kernel(s):
+		for f, shift in zip(s.fs, s.shifts):		
+			s.program.subdomain(s.emf.queue, (s.emf.gs,), (s.emf.ls,), *(s.emf.ns + [np.int32(shift), s.fgpu, f]) )
+
+		return cl.enqueue_read_buffer(s.emf.queue, s.fgpu, s.fhost, is_blocking=False)
+
+
+	def get_event_using_copy(s):
+		for f, offset_dst in zip(s.fs, s.offset_dsts):		
+			cl.enqueue_copy_buffer(s.emf.queue, f, s.fgpu, s.nbytes, s.offset_src, offset_dst)
+
+		return cl.enqueue_read_buffer(s.emf.queue, s.fgpu, s.fhost, is_blocking=False)
+
+
+	def get_event_direct_read(s):
+		return cl.enqueue_read_buffer(s.emf.queue, s.fs[0], s.fhost, s.offset, is_blocking=False)
+
+
+	def get_fields(s, str_f=None):
+		if str_f == None:
+			return s.fhost
+		else:
+			return dict( zip(s.str_fs, np.array_split(s.fhost, s.f_size)) )[str_f]
+
+
+
+
+class SetFields:
+	def __init__(s, fields, str_fs, pt0, pt1, dtype_values=None, wait_event=False):
+		s.emf = fields
+		if type(str_fs) == str:
+			s.str_fs = [str_fs,]
+		else:
+			s.str_fs = str_fs
+
+		s.dtype_values = dtype_values
+		s.f_size = len(s.str_fs)
+
+
+		# program
+		s.rplist = common_gpu.get_replace_list(pt0, pt1)
+		macros, vals = s.rplist['macros'], s.rplist['vals']
+		macros += ['ARGS', 'TARGET', 'SOURCE']
+		if s.dtype_values == np.ndarray:
+			vals += ['__global float *source', 'target[idx1]', 'source[idx2]']
+		else:
+			vals += ['float source', 'target[idx1]', 'source']
+		ksrc = common.replace_template_code(open(common_gpu.src_path + '/copy_subdomain.cl').read(), macros, vals)
+		s.program = cl.Program(s.emf.context, ksrc).build()
+
+
+		# allocation
+		s.fs = [s.emf.get_buffer(sf) for sf in s.str_fs]
+		s.shifts = [0] + [s.rplist['vals'][0] for sf in s.str_fs[1:]]
+		shape = list( s.rplist['shape'] )
+		shape[0] *= s.f_size
+
+		if s.dtype_values == np.ndarray:
+			s.fhost = np.zeros(shape, dtype=s.emf.dtype)
+			mflags = cl.mem_flags.READ_WRITE | cl.mem_flags.COPY_HOST_PTR
+			s.fgpu = cl.Buffer(s.emf.context, mflags, hostbuf=s.fhost)
+
+			if wait_event:
+				s.set_fields = s.set_fields_spatial_evt
+			else:
+				s.set_fields = s.set_fields_spatial
+
+		else:
+			if wait_event:
+				s.set_fields = s.set_fields_non_spatial_evt
+			else:
+				s.set_fields = s.set_fields_non_spatial
+
+
+	
+	def set_fields_spatial(s, values):
+		assert values.dtype == s.fhost.dtype
+		evt_write = cl.enqueue_write_buffer(s.emf.queue, s.fgpu, values, is_blocking=False)
+
+		s.program.subdomain(s.emf.queue, (s.emf.gs,), (s.emf.ls,), *(s.emf.ns + [np.int32(0), s.fs[0], s.fgpu]), wait_for=[evt_write] )
+		for f, shift in zip(s.fs, s.shifts)[1:]:		
+			s.program.subdomain(s.emf.queue, (s.emf.gs,), (s.emf.ls,), *(s.emf.ns + [np.int32(shift), f, s.fgpu]))
+
+
+	def set_fields_spatial_evt(s, values, evt):
+		assert values.dtype == s.fhost.dtype
+		evt_write = cl.enqueue_write_buffer(s.emf.queue, s.fgpu, values, is_blocking=False, wait_for=[evt])
+
+		s.program.subdomain(s.emf.queue, (s.emf.gs,), (s.emf.ls,), *(s.emf.ns + [np.int32(0), s.fs[0], s.fgpu]), wait_for=[evt_write] )
+		for f, shift in zip(s.fs, s.shifts)[1:]:		
+			s.program.subdomain(s.emf.queue, (s.emf.gs,), (s.emf.ls,), *(s.emf.ns + [np.int32(shift), f, s.fgpu]))
+
+
+	def set_fields_non_spatial(s, values):
+		for f, shift in zip(s.fs, s.shifts):		
+			s.program.subdomain(s.emf.queue, (s.emf.gs,), (s.emf.ls,), *(s.emf.ns + [np.int32(shift), f, s.emf.dtype(values)]) )
+
+	
+	def set_fields_non_spatial_evt(s, values, evt):
+		s.program.subdomain(s.emf.queue, (s.emf.gs,), (s.emf.ls,), *(s.emf.ns + [np.int32(0), s.fs[0], s.emf.dtype(values)]), wait_for=[evt])
+		for f, shift in zip(s.fs, s.shifts)[1:]:		
+			s.program.subdomain(s.emf.queue, (s.emf.gs,), (s.emf.ls,), *(s.emf.ns + [np.int32(shift), f, s.emf.dtype(values)]) )

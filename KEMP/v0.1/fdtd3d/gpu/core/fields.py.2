@@ -1,0 +1,270 @@
+import numpy as np
+import pyopencl as cl
+import unittest
+
+from kemp.fdtd3d.util import common, common_gpu
+
+
+class Fields:
+    def __init__(self, context, device, \
+            nx, ny, nz, \
+            local_work_size=256, \
+            global_work_size=0, \
+            coeff_use='e', \
+            dtype=np.float32):
+        """
+        """
+
+        common.type_check('context', context, cl.Context)
+        common.type_check('device', device, cl.Device)
+        common.type_check('nx', nx, int)
+        common.type_check('ny', ny, int)
+        common.type_check('nz', nz, int)
+        common.type_check('global_work_size', global_work_size, int)
+        common.type_check('local_work_size', local_work_size, int)
+
+        common.value_check('dtype', dtype, (np.float32, np.float64))
+        common.value_check('coeff_use', coeff_use, ('', 'e', 'h', 'eh'))
+
+        self.context = context
+        self.device = device
+        self.nx = nx
+        self.ny = ny
+        self.nz = nz
+        self.ls = local_work_size
+        self.gs = global_work_size
+        self.coeff_use = coeff_use
+        self.dtype = dtype
+        self.dtype_str = {np.float32:'float', np.float64:'double'}[dtype]
+        self.device_type = 'gpu'
+
+        # ns, queue, global_size
+        self.ns = [np.int32(nx), np.int32(ny), np.int32(nz)]
+        self.queue = cl.CommandQueue(self.context, self.device)
+        if self.gs == 0:
+            self.gs = common_gpu.get_optimal_gs(self.device)
+
+        # on/off the coefficient arrays
+        if 'e' in self.coeff_use:
+            ce_on = True
+        else:
+            ce_on = False
+
+        if 'h' in self.coeff_use:
+            ch_on = True
+        else:
+            ch_on = False
+
+        # allocations
+        f = np.zeros(self.ns, dtype=self.dtype)
+        cf = np.ones_like(f) * 0.5
+        mf = cl.mem_flags
+
+        self.eh_bufs = [cl.Buffer(self.context, mf.READ_WRITE, f.nbytes) \
+                for i in range(6)]
+        for eh_buf in self.eh_bufs:
+            cl.enqueue_copy(self.queue, eh_buf, f) 
+        self.ex_buf, self.ey_buf, self.ez_buf = self.eh_bufs[:3]
+        self.hx_buf, self.hy_buf, self.hz_buf = self.eh_bufs[3:]
+
+        if ce_on:
+            self.ce_bufs = [cl.Buffer(self.context, mf.READ_ONLY, cf.nbytes) \
+                    for i in range(3)]
+            self.cex_buf, self.cey_buf, self.cez_buf = self.ce_bufs
+
+        if ch_on:
+            self.ch_bufs = [cl.Buffer(self.context, mf.READ_ONLY, cf.nbytes) \
+                    for i in range(3)]
+            self.chx_buf, self.chy_buf, self.chz_buf = self.ch_bufs
+
+        del f, cf
+
+        # program
+        dtype_pragma = { \
+                np.float32:'', \
+                np.float64:'#pragma OPENCL EXTENSION cl_khr_fp64 : enable'}[dtype]
+
+        macros = ['ARGS_CE', 'CEX', 'CEY', 'CEZ', \
+                'ARGS_CH', 'CHX', 'CHY', 'CHZ', \
+                'DX', 'DTYPE', 'PRAGMA_fp64']
+
+        values = ['', '0.5', '0.5', '0.5', \
+                '', '0.5', '0.5', '0.5', \
+                str(self.ls) , self.dtype_str, dtype_pragma]
+
+        self.e_args = self.ns + self.eh_bufs
+        self.h_args = self.ns + self.eh_bufs
+
+        if ce_on:
+            values[:4] = [ \
+                    ', __global const DTYPE *cex, __global const DTYPE *cey, __global const DTYPE *cez', \
+                    'cex[idx]', 'cey[idx]', 'cez[idx]']
+            self.e_args += self.ce_bufs
+
+        if ch_on:
+            values[4:8] = [ \
+                    ', __global const DTYPE *chx, __global const DTYPE *chy, __global const DTYPE *chz', \
+                    'chx[idx]', 'chy[idx]', 'chz[idx]']
+            self.h_args += self.ch_bufs
+
+        ksrc = common.replace_template_code(open('core.cl').read(), macros, values)
+        self.program = cl.Program(self.context, ksrc).build()
+
+
+    def get_buf(self, str_f):
+        return self.__dict__[str_f + '_buf']
+
+
+    def set_ce(self, cex, cey, cez):
+        for ce_buf, ce in zip(self.ce_bufs, [cex, cey, cez]): 
+            cl.enqueue_copy(self.queue, ce_buf, ce) 
+
+
+    def set_ch(self, chx, chy, chz):
+        for ch_buf, ch in zip(self.ch_bufs, [chx, chy, chz]): 
+            cl.enqueue_copy(self.queue, ch_buf, ch) 
+
+
+    def update_e(self):
+        self.program.update_e(self.queue, (self.gs,), (self.ls,), *self.e_args)
+
+
+    def update_h(self):
+        self.program.update_h(self.queue, (self.gs,), (self.ls,), *self.h_args)
+
+
+
+class TestFunctions(unittest.TestCase):
+    def setUp(self):
+        gpu_devices = common_gpu.gpu_device_list(print_info=False)
+        self.context = cl.Context(gpu_devices)
+        self.device = gpu_devices[0]
+
+
+    def init_fields(self, nx, ny, nz, coeff_use, dtype):
+        self.fields = Fields(self.context, self.device, \
+                nx, ny, nz, coeff_use=coeff_use, dtype=dtype)
+
+        self.ehs = [np.random.rand(nx, ny, nz).astype(dtype) for i in range(6)]
+        for eh_buf, eh in zip(self.fields.eh_bufs, self.ehs):
+			cl.enqueue_copy(self.fields.queue, eh_buf, eh)
+
+        if 'e' in coeff_use:
+            self.ces = [np.random.rand(nx, ny, nz).astype(dtype) for i in range(3)]
+            self.fields.set_ce(*self.ces)
+        else:
+            self.ces = [np.ones((nx, ny, nz), dtype=dtype)*0.5 for i in range(3)]
+
+        if 'h' in coeff_use:
+            self.chs = [np.random.rand(nx, ny, nz).astype(dtype) for i in range(3)]
+            self.fields.set_ch(*self.chs)
+        else:
+            self.chs = [np.ones((nx, ny, nz), dtype=dtype)*0.5 for i in range(3)]
+
+        self.tmpf = np.zeros((nx, ny, nz), dtype=dtype)
+
+
+    def update_e(self):
+        ex, ey, ez, hx, hy, hz = self.ehs
+        cex, cey, cez = self.ces
+
+        ex[:, :-1, :-1] += cex[:, :-1, :-1] * \
+                (hz[:, 1:, :-1] - hz[:, :-1, :-1] - hy[:, :-1, 1:] + hy[:, :-1, :-1])
+        ey[:-1, :, :-1] += cey[:-1, :, :-1] * \
+                (hx[:-1, :, 1:] - hx[:-1, :, :-1] - hz[1:, :, :-1] + hz[:-1, :, :-1])
+        ez[:-1, :-1, :] += cez[:-1, :-1, :] * \
+                (hy[1:, :-1, :] - hy[:-1, :-1, :] - hx[:-1, 1:, :] + hx[:-1, :-1, :])
+
+
+    def update_h(self):
+        ex, ey, ez, hx, hy, hz = self.ehs
+        chx, chy, chz = self.chs
+
+        hx[:, 1:, 1:] -= chx[:, 1:, 1:] * \
+                (ez[:, 1:, 1:] - ez[:, :-1, 1:] - ey[:, 1:, 1:] + ey[:, 1:, :-1])
+        hy[1:, :, 1:] -= chy[1:, :, 1:] * \
+                (ex[1:, :, 1:] - ex[1:, :, :-1] - ez[1:, :, 1:] + ez[:-1, :, 1:])
+        hz[1:, 1:, :] -= chz[1:, 1:, :] * \
+                (ey[1:, 1:, :] - ey[:-1, 1:, :] - ex[1:, 1:, :] + ex[1:, :-1, :])
+
+
+    def verify_e(self, ndigit):
+        self.update_e()
+        self.fields.update_e()
+
+        for strf, eh in zip(['ex', 'ey', 'ez'], self.ehs[:3]):
+            cl.enqueue_copy(self.fields.queue, self.tmpf, self.fields.get_buf(strf))
+            self.assertAlmostEqual(np.abs(eh - self.tmpf).max(), 0, ndigit, strf)
+
+
+    def verify_h(self, ndigit):
+        self.update_h()
+        self.fields.update_h()
+
+        for strf, eh in zip(['hx', 'hy', 'hz'], self.ehs[3:]):
+            cl.enqueue_copy(self.fields.queue, self.tmpf, self.fields.get_buf(strf))
+            self.assertAlmostEqual(np.abs(eh - self.tmpf).max(), 0, ndigit, strf)
+
+    def test_update_e(self):
+        self.init_fields(40, 50, 64, '', np.float32)
+        self.verify_e(20)
+
+
+    def test_update_h(self):
+        self.init_fields(40, 50, 64, '', np.float32)
+        self.verify_h(20)
+
+
+    def test_update_e_ce(self):
+        self.init_fields(40, 50, 64, 'e', np.float32)
+        self.verify_e(6)
+
+
+    def test_update_h_ch(self):
+        self.init_fields(40, 50, 64, 'h', np.float32)
+        self.verify_h(6)
+
+
+    def test_update_e_64(self):
+        self.init_fields(40, 50, 64, '', np.float64)
+        self.verify_e(20)
+
+
+    def test_update_h_64(self):
+        self.init_fields(40, 50, 64, '', np.float64)
+        self.verify_h(20)
+
+
+    def test_update_e_ce_64(self):
+        self.init_fields(40, 50, 64, 'e', np.float64)
+        self.verify_e(15)
+
+
+    def test_update_h_ch_64(self):
+        self.init_fields(40, 50, 64, 'h', np.float64)
+        self.verify_h(15)
+
+
+    def test_update_e_64_non_multiple32(self):
+        self.init_fields(40, 50, 61, '', np.float64)
+        self.verify_e(20)
+
+
+    def test_update_h_64_non_multiple32(self):
+        self.init_fields(40, 50, 61, '', np.float64)
+        self.verify_h(20)
+
+
+    def test_update_e_ce_64_non_multiple32(self):
+        self.init_fields(40, 50, 61, 'e', np.float64)
+        self.verify_e(15)
+
+
+    def test_update_h_ch_64_non_multiple32(self):
+        self.init_fields(40, 50, 61, 'h', np.float64)
+        self.verify_h(15)
+
+
+
+if __name__ == '__main__':
+    unittest.main()

@@ -1,0 +1,119 @@
+import atexit
+import numpy as np
+import os
+import subprocess as sp
+import tempfile
+import unittest
+
+import common
+
+
+sep = os.path.sep
+src_path = sep.join(common.__file__.split(sep)[:-2] + ['cpu', 'src', ''])
+
+
+def print_cpu_info():
+    for line in open('/proc/cpuinfo'):
+        if 'model name' in line:
+            cpu_name0 = line[line.find(':')+1:-1]
+            break
+    cpu_name = ' '.join(cpu_name0.split())
+
+    for line in open('/proc/meminfo'):
+        if 'MemTotal' in line:
+            mem_nbytes = int(line[line.find(':')+1:line.rfind('kB')]) * 1024
+            break
+    print('Host Device :')
+    print('  name: %s' % cpu_name)
+    print('  mem size: %1.2f %s' % common.binary_prefix_nbytes(mem_nbytes))
+    print('')
+
+
+
+def remove_tmpfiles(path):
+    """
+    Remove the tempfiles *.c and *.so in the path directory
+    """
+
+    os.remove(path)
+    os.remove(path.replace('.c', '.so'))
+
+
+
+class CompileError(Exception):
+    """
+    User-defined exception
+    Return the compile error message
+    """
+
+    def __init__(self, stderr):
+        Exception.__init__(self)
+        self.stderr = stderr
+
+
+    def __str__(self):
+        return '\n' + self.stderr
+
+
+
+def build_clib(src):
+    """
+    Build the C code and Return the C library
+
+    When the compile errors are occured, 
+    the CompileError Exception is raised.
+    """
+
+    path = tempfile.gettempdir() + '/kemp'
+    if not os.path.exists(path): 
+        os.mkdir(path)
+    cfile = tempfile.NamedTemporaryFile(suffix='.c', dir=path, delete=False)
+    cfile.write(src)
+    cfile.close()
+    cmd = 'gcc -O3 -std=c99 -fpic -shared -fopenmp -msse %s -o %s' \
+            % (cfile.name, cfile.name.replace('.c','.so'))
+    proc = sp.Popen(cmd.split(), stderr=sp.PIPE)
+    stdout, stderr = proc.communicate()
+    if stderr != '':
+        raise CompileError(stderr)
+
+    libname = os.path.split( os.path.splitext(cfile.name)[0] )[-1]
+    program = np.ctypeslib.load_library(libname, path)
+    atexit.register(remove_tmpfiles, cfile.name)
+
+    return program
+
+
+
+class TestFunctions(unittest.TestCase):
+    def test_print_cpu_info(self):
+        print_cpu_info()
+
+
+    def test_build_clib(self):
+        src = '''
+        int sum(int a, int b) {
+            return a + b;
+        }
+        '''
+        program = build_clib(src)
+
+        from ctypes import c_int
+        program.sum.argtypes = [c_int, c_int]
+        program.sum.restype = c_int
+        ret = program.sum(np.int32(7), np.int32(8))
+        self.assertEqual(15, ret)
+
+
+    def test_build_clib_compile_error(self):
+        src = '''
+        int sum(int a, int b) {
+            return a + b
+        }
+        '''
+        self.assertRaises(CompileError, build_clib, src)
+
+
+
+if __name__ == '__main__':
+    unittest.main()

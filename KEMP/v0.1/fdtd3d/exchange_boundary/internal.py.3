@@ -1,0 +1,97 @@
+import numpy as np
+from kemp.fdtd3d import gpu, cpu
+from threading import Thread
+from Queue import Queue
+import atexit
+
+
+def get_pts_for_boundary(axis, nx, ny, nz):
+	pt0 = {
+			'x': {'-':(0, 0, 0), '+':(nx-1, 0, 0)},
+			'y': {'-':(0, 0, 0), '+':(0, ny-1, 0)},
+			'z': {'-':(0, 0, 0), '+':(0, 0, nz-1)} }[axis]
+	pt1 = {
+			'x': {'-':(0, ny-1, nz-1), '+':(nx-1, ny-1, nz-1)},
+			'y': {'-':(nx-1, 0, nz-1), '+':(nx-1, ny-1, nz-1)},
+			'z': {'-':(nx-1, ny-1, 0), '+':(nx-1, ny-1, nz-1)} }[axis]
+
+	return pt0, pt1
+
+
+
+class EventBridge(Thread):
+	def __init__(s, context):
+		Thread.__init__(s)
+		s.daemon = True
+		s.ctx = context
+		s.queue = Queue()
+		s.cl = __import__('pyopencl')
+		atexit.register( s.queue.join() )
+
+		s.start()
+
+
+	def run(s):
+		while True:
+			evt, cl_evt = s.queue.get()
+			evt.wait()
+			print s.cl.command_execution_status.COMPLETE
+			cl_evt.set_status( s.cl.command_execution_status.COMPLETE )
+
+			s.queue.task_done()
+
+
+	def get_cl_event(s, getf):	
+		evt = getf.get_event()
+		cl_evt = s.cl.UserEvent(s.ctx)
+		s.queue.put((evt, cl_evt))
+
+		return cl_evt
+
+
+	
+class ExchangeInternal:
+	def __init__(s, fields_list, axis):
+		emf_list = fields_list
+
+		e_strfs = {'x':['ey','ez'], 'y':['ex','ez'], 'z':['ex','ey']}[axis]
+		h_strfs = {'x':['hy','hz'], 'y':['hx','hz'], 'z':['hx','hy']}[axis]
+		pts = [get_pts_for_boundary(axis, *emf.ns) for emf in emf_list]
+
+		s.e_getfs, s.h_getfs = [], []
+		s.e_setfs, s.h_setfs = [], []
+		s.gpu, s.cpu = gpu, cpu
+
+		for emf, (pt0, pt1) in zip(emf_list, pts)[1:]:
+			s.e_getfs.append( getattr(s, emf.device_type).GetFields(emf, e_strfs, pt0['-'], pt1['-']) )
+			s.h_setfs.append( getattr(s, emf.device_type).SetFields(emf, h_strfs, pt0['-'], pt1['-'], np.ndarray) )
+
+		for emf, (pt0, pt1) in zip(emf_list, pts)[:-1]:
+			s.h_getfs.append( getattr(s, emf.device_type).GetFields(emf, h_strfs, pt0['+'], pt1['+']) )
+			s.e_setfs.append( getattr(s, emf.device_type).SetFields(emf, e_strfs, pt0['+'], pt1['+'], np.ndarray) )
+
+		s.e_waits = s.get_wait_list(s.e_setfs, s.e_getfs)
+		s.h_waits = s.get_wait_list(s.h_setfs, s.h_getfs)
+
+
+
+	def get_wait_list(s, setfs, getfs):
+		wait_list = []
+		for setf, getf in zip(setfs, getfs):
+			if setf.emf.device_type == 'gpu' and getf.emf.device_type == 'cpu': 
+				s.evt_bridge = EventBridge(setf.emf.context)
+				wait_list.append( lambda getf: s.evt_bridge.get_cl_event(getf) )
+			else:
+				wait_list.append( lambda getf: getf.get_event() )
+
+		return wait_list
+
+
+	def update_e(s):
+		for setf, getf, wait in zip(s.e_setfs, s.e_getfs, s.e_waits):
+			setf.set_fields(getf.get_fields(), [wait(getf)])
+
+
+	def update_h(s):
+		for setf, getf, wait in zip(s.h_setfs, s.h_getfs, s.h_waits):
+			setf.set_fields(getf.get_fields(), [wait(getf)])

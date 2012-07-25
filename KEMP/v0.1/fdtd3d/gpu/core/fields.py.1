@@ -1,0 +1,90 @@
+import numpy as np
+import pyopencl as cl
+from kemp.fdtd3d import common, common_gpu
+
+
+class Fields:
+	def __init__(s, \
+			context, device, nx, ny, nz, dtype=np.float32, \
+			coeff_use='e', \
+			global_work_size=None, local_work_size=256):
+		s.context = context
+		s.device = device
+		s.nx = nx
+		s.ny = ny
+		s.nz = nz
+		s.dtype = dtype
+        s.dtype_str = {np.float32:'float', np.float64:'double'}
+		s.coeff_use = coeff_use
+		s.gs = global_work_size
+		s.ls = local_work_size
+		s.device_type = 'gpu'
+
+
+		# ns, queue, global_size
+		s.ns = [np.int32(s.nx), np.int32(s.ny), np.int32(s.nz)]
+		s.queue = cl.CommandQueue(s.context, s.device)
+		if s.gs == None:
+			s.gs = common_gpu.get_optimal_global_work_size(s.device)
+
+
+		# onoff the coefficient arrays
+		if bool(set(s.coeff_use).intersection(['e','E'])):
+			s.ce_on = True
+		else:
+			s.ce_on = False
+
+		if bool(set(s.coeff_use).intersection(['h','H'])):
+			s.ch_on = True
+		else:
+			s.ch_on = False
+
+
+		# allocations
+		f = np.zeros((s.nx, s.ny, s.nz), dtype=s.dtype)
+		cf = np.ones_like(f) * 0.5
+		mf = cl.mem_flags
+		s.ehs = [cl.Buffer(s.context, mf.READ_WRITE, f.nbytes) for i in range(6)]
+		for eh in s.ehs: cl.enqueue_write_buffer(s.queue, eh, f) 
+		s.ex, s.ey, s.ez, s.hx, s.hy, s.hz = s.ehs
+
+		if s.ce_on:
+			s.ces = [cl.Buffer(s.context, mf.READ_ONLY, cf.nbytes) for i in range(3)]
+			for ce in s.ces: cl.enqueue_write_buffer(s.queue, ce, cf) 
+			s.cex, s.cey, s.cez = s.ces 
+
+		if s.ch_on:
+			s.chs = [cl.Buffer(s.context, mf.READ_ONLY, cf.nbytes) for i in range(3)]
+			for ch in s.chs: cl.enqueue_write_buffer(s.queue, ch, cf) 
+			s.chx, s.chy, s.chz = s.chs
+
+		del f, cf
+
+
+		# program
+		macros = ['DX', 'ARGS_CE', 'CEX', 'CEY', 'CEZ', 'ARGS_CH', 'CHX', 'CHY', 'CHZ']
+		vals = [str(s.ls), '', '0.5', '0.5', '0.5', '', '0.5', '0.5', '0.5']
+		s.e_args = s.ns + s.ehs
+		s.h_args = s.ns + s.ehs
+
+		if s.ce_on:
+			vals[1:5] = [', __global const float *cex, __global const float *cey, __global const float *cez', 'cex[idx]', 'cey[idx]', 'cez[idx]']
+			s.e_args += s.ces
+		if s.ch_on:
+			vals[5:] = [', __global const float *chx, __global const float *chy, __global const float *chz', 'chx[idx]', 'chy[idx]', 'chz[idx]']
+			s.h_args += s.chs
+
+		ksrc = common.replace_template_code(open(common_gpu.src_path + 'core.cl').read(), macros, vals)
+		s.program = cl.Program(s.context, ksrc).build()
+
+
+	def get_buffer(s, str_f):
+		return s.__dict__[str_f]
+
+
+	def update_e(s):
+		s.program.update_e(s.queue, (s.gs,), (s.ls,), *s.e_args)
+
+
+	def update_h(s):
+		s.program.update_h(s.queue, (s.gs,), (s.ls,), *s.h_args)

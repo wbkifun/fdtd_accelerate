@@ -1,0 +1,90 @@
+nodef, instance_list 0 [<kemp.fdtd3d.node.exchange.ExchangeNode instance at 0x15b0b48>]
+f0, instance_list 0 [<kemp.fdtd3d.gpu.core.Core instance at 0x18bccb0>]
+bufferf x+, instance_list 0 [<kemp.fdtd3d.cpu.core.Core instance at 0x18bc7e8>, <kemp.fdtd3d.network.exchange.ExchangeMpi instance at 0x18bc6c8>]
+nodef, instance_list 1 [<kemp.fdtd3d.node.exchange.ExchangeNode instance at 0x20b4b00>]
+f0, instance_list 1 [<kemp.fdtd3d.gpu.core.Core instance at 0x23a0c20>]
+bufferf x-, instance_list 1 [<kemp.fdtd3d.cpu.core.Core instance at 0x23a0758>, <kemp.fdtd3d.network.exchange.ExchangeMpi instance at 0x23a0440>]
+
+upE pre 
+1 <_FuncPtr object at 0x2018c80>
+1 <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x23a05f0>>
+1 <built-in method Start of mpi4py.MPI.Prequest object at SEND>
+1 <built-in method Start of mpi4py.MPI.Prequest object at RECV1>
+upE post 
+1 <_FuncPtr object at 0x2018c80>
+
+node exch E
+1 <bound method SetFields.set_fields_spatial_value of <kemp.fdtd3d.cpu.get_set_fields.SetFields instance at 0x23a0248>>
+
+save E
+1 <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x23a0cb0>>
+
+upH 
+1 <_FuncPtr object at 0x2018d50>
+
+node exch H
+1 <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x23a0518>>
+
+save H
+1 <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x23a07e8>>
+
+----------------------------------------------------------------------------------------------------------------------------
+upE pre
+1 <_FuncPtr object at 0x2018c80>
+1 <built-in method Wait of mpi4py.MPI.Prequest object at SEND>
+1 <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x23a05f0>>
+1 <built-in method Start of mpi4py.MPI.Prequest object at SEND>
+1 <built-in method Wait of mpi4py.MPI.Prequest object at RECV1>
+1 <bound method SetFields.set_fields_spatial_value of <kemp.fdtd3d.cpu.get_set_fields.SetFields instance at 0x23a06c8>>
+1 <built-in method Start of mpi4py.MPI.Prequest object at RECV2>
+
+upE post
+1 <_FuncPtr object at 0x2018c80>
+
+node exch E
+1 <bound method SetFields.set_fields_spatial_value of <kemp.fdtd3d.cpu.get_set_fields.SetFields instance at 0x23a0248>>
+save E
+1 <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x23a0cb0>>
+
+upH 
+1 <_FuncPtr object at 0x2018d50>
+
+node exch H
+1 <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x23a0518>>
+save H
+1 <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x23a07e8>>
+
+
+----------------------------------------------------------------------------------------------------------------------------
+upE pre
+1 <_FuncPtr object at 0x2018c80>
+1 <built-in method Wait of mpi4py.MPI.Prequest object at SEND>
+1 <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x23a05f0>>
+1 <built-in method Start of mpi4py.MPI.Prequest object at SEND>
+1 <built-in method Wait of mpi4py.MPI.Prequest object at RECV2>
+1 <bound method SetFields.set_fields_spatial_value of <kemp.fdtd3d.cpu.get_set_fields.SetFields instance at 0x23a06c8>>
+1 <built-in method Start of mpi4py.MPI.Prequest object at RECV1>
+
+upE post
+1 <_FuncPtr object at 0x2018c80>
+
+node exch E
+1 <bound method SetFields.set_fields_spatial_value of <kemp.fdtd3d.cpu.get_set_fields.SetFields instance at 0x23a0248>>
+save E
+1 <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x23a0cb0>>
+
+upH
+1 <_FuncPtr object at 0x2018d50>
+node exch H
+1 <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x23a0518>>
+save H
+1 <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x23a07e8>>
+
+----------------------------------------------------------------------------------------------------------------------------
+upE pre
+1 <_FuncPtr object at 0x2018c80>
+1 <built-in method Wait of mpi4py.MPI.Prequest object at SEND>
+1 <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x23a05f0>>
+1 <built-in method Start of mpi4py.MPI.Prequest object at SEND>
+1 <built-in method Wait of mpi4py.MPI.Prequest object at RECV1>
+2 total processes killed (some possibly by mpirun during cleanup)

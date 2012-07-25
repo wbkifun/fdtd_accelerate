@@ -1,0 +1,86 @@
+tstep = 1
+---------------------------------------------------------------------
+upE pre
+rank=1, <_FuncPtr object at 0x2890c80>
+rank=1, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x2c185f0>>
+rank=1, <built-in method Start of mpi4py.MPI.Prequest object at 1_SEND>
+rank=1, <built-in method Start of mpi4py.MPI.Prequest object at 1_RECV0>
+
+upE post
+rank=1, <_FuncPtr object at 0x2890c80>
+exch, save E
+rank=1, <bound method SetFields.set_fields_spatial_value of <kemp.fdtd3d.cpu.get_set_fields.SetFields instance at 0x2c18248>>
+rank=1, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x2c18cb0>>
+
+upH, exch, save H
+rank=1, <_FuncPtr object at 0x2890d50>
+rank=1, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x2c18518>>
+rank=1, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x2c187e8>>
+
+
+
+tstep = 2
+---------------------------------------------------------------------
+upE pre
+rank=1, <_FuncPtr object at 0x2890c80>
+rank=1, <built-in method Wait of mpi4py.MPI.Prequest object at 1_SEND>
+
+
+rank=1, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x2c185f0>>
+rank=1, <built-in method Start of mpi4py.MPI.Prequest object at 1_SEND>
+rank=1, <built-in method Wait of mpi4py.MPI.Prequest object at 1_RECV0>
+rank=1, <bound method SetFields.set_fields_spatial_value of <kemp.fdtd3d.cpu.get_set_fields.SetFields instance at 0x2c186c8>>
+rank=1, <built-in method Start of mpi4py.MPI.Prequest object at 1_RECV1>
+
+upE post
+rank=1, <_FuncPtr object at 0x2890c80>
+
+exch, save E
+rank=1, <bound method SetFields.set_fields_spatial_value of <kemp.fdtd3d.cpu.get_set_fields.SetFields instance at 0x2c18248>>
+rank=1, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x2c18cb0>>
+
+
+upH, exch, save
+rank=1, <_FuncPtr object at 0x2890d50>
+rank=1, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x2c18518>>
+rank=1, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x2c187e8>>
+
+
+tstep = 3
+---------------------------------------------------------------------
+upE pre
+rank=1, <_FuncPtr object at 0x2890c80>
+rank=1, <built-in method Wait of mpi4py.MPI.Prequest object at 1_SEND>
+rank=1, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x2c185f0>>
+rank=1, <built-in method Start of mpi4py.MPI.Prequest object at 1_SEND>
+rank=1, <built-in method Wait of mpi4py.MPI.Prequest object at 1_RECV1>
+
+
+
+rank=1, <bound method SetFields.set_fields_spatial_value of <kemp.fdtd3d.cpu.get_set_fields.SetFields instance at 0x2c186c8>>
+rank=1, <built-in method Start of mpi4py.MPI.Prequest object at 1_RECV0>
+
+upE post, exch, save
+rank=1, <_FuncPtr object at 0x2890c80>
+rank=1, <bound method SetFields.set_fields_spatial_value of <kemp.fdtd3d.cpu.get_set_fields.SetFields instance at 0x2c18248>>
+rank=1, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x2c18cb0>>
+
+
+
+upH, exch, save
+rank=1, <_FuncPtr object at 0x2890d50>
+rank=1, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x2c18518>>
+rank=1, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x2c187e8>>
+
+
+tstep = 4
+---------------------------------------------------------------------
+upE pre
+rank=1, <_FuncPtr object at 0x2890c80>
+rank=1, <built-in method Wait of mpi4py.MPI.Prequest object at 1_SEND>
+rank=1, <bound method GetFields.copy_to_host_array of <kemp.fdtd3d.cpu.get_set_fields.GetFields instance at 0x2c185f0>>
+rank=1, <built-in method Start of mpi4py.MPI.Prequest object at 1_SEND>
+rank=1, <built-in method Wait of mpi4py.MPI.Prequest object at 1_RECV0>
+
+
+2 total processes killed (some possibly by mpirun during cleanup)

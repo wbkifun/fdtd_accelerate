@@ -1,0 +1,64 @@
+def binary_prefix_bytes(bytes):
+    """
+    Convert the binary prefix for bytes
+
+    >>> binary_prefix_bytes(2000000000)
+
+    """
+    assert isinstance(bytes, int), "argument 'bytes' must be a integer"
+
+    if bytes >= 1024**3: 
+        value = float(bytes)/(1024**3)
+        prefix_str = 'GB'
+    elif bytes >= 1024**2: 
+        value = float(bytes)/(1024**2)
+        prefix_str = 'MB'
+    elif bytes >= 1024: 
+        value = float(bytes)/1024
+        prefix_str = 'KB'
+    else:
+        value = bytes
+        prefix_str = 'Bytes'
+
+	return value, prefix_str
+
+
+def print_nbytes(head_str, nx, ny, nz, num_array, nbytes):
+	print('%s (%d, %d, %d)' %(head_str, nx, ny, nz)),
+	print('%1.2f %s' % get_nbytes_unit(nx * ny * nz * nbytes * num_array))
+
+
+def replace_template_code(code, old_list, new_list):
+	assert len(old_list) == len(new_list)
+	for old, new in zip(old_list, new_list):
+		code = code.replace(old, new)
+
+	return code
+
+
+def get_slice_index(pt0, pt1):
+	slidx = [0, 0, 0]
+	for i, p0, p1 in zip([0,1,2], pt0, pt1):
+		if p0 == p1:
+			slidx[i] = p0
+		else:
+			slidx[i] = slice(p0, p1+1)
+
+	return tuple(slidx)
+
+
+def get_shape(pt0, pt1):
+	shape = []
+	for p0, p1 in zip(pt0, pt1):
+		if p0 != p1:
+			shape.append( abs(p1-p0) + 1 )
+
+	if shape == []:
+		return [1]
+	else:
+		return shape
+
+
+
+if __name__ == '__main__':
+	print_nbytes('sample', 240, 256, 256, 9, 4)

@@ -1,0 +1,8 @@
+Exception in thread Thread-1 (most likely raised during interpreter shutdown):
+Traceback (most recent call last):
+  File "/usr/lib/python2.6/threading.py", line 532, in __bootstrap_inner
+  File "/home/kifang/kemp/fdtd3d/cpu/queue_task.py", line 19, in run
+  File "/usr/lib/python2.6/Queue.py", line 168, in get
+  File "/usr/lib/python2.6/threading.py", line 232, in wait
+<type 'exceptions.TypeError'>: 'NoneType' object is not callable
+
